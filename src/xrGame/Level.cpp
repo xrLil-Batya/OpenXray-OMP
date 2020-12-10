@@ -83,25 +83,28 @@ CLevel::CLevel()
     eEnvironment = Engine.Event.Handler_Attach("LEVEL:Environment", this);
     eEntitySpawn = Engine.Event.Handler_Attach("LEVEL:spawn", this);
     m_pBulletManager = xr_new<CBulletManager>();
-    if (!GEnv.isDedicatedServer)
-    {
+    //if (!GEnv.isDedicatedServer)
+    //{
         m_map_manager = xr_new<CMapManager>();
         m_game_task_manager = xr_new<CGameTaskManager>();
-    }
+    //}
+
     m_dwDeltaUpdate = u32(fixed_step * 1000);
     m_seniority_hierarchy_holder = xr_new<CSeniorityHierarchyHolder>();
-    if (!GEnv.isDedicatedServer)
-    {
+    //if (!GEnv.isDedicatedServer)
+    //{
         m_level_sound_manager = xr_new<CLevelSoundManager>();
         m_space_restriction_manager = xr_new<CSpaceRestrictionManager>();
         m_client_spawn_manager = xr_new<CClientSpawnManager>();
         m_autosave_manager = xr_new<CAutosaveManager>();
+
 #ifdef DEBUG
         m_debug_renderer = xr_new<CDebugRenderer>();
         levelGraphDebugRender = xr_new<LevelGraphDebugRender>();
         m_level_debug = xr_new<CLevelDebug>();
 #endif
-    }
+    //}
+
     m_ph_commander = xr_new<CPHCommander>();
     m_ph_commander_scripts = xr_new<CPHCommander>();
     pObjects4CrPr.clear();
@@ -109,6 +112,10 @@ CLevel::CLevel()
     g_player_hud = xr_new<player_hud>();
     g_player_hud->load_default();
     Msg("%s", Core.Params);
+
+    m_game_graph = 0;
+    m_chunk = 0;
+    spawn = 0;
 }
 
 CLevel::~CLevel()
@@ -150,7 +157,7 @@ CLevel::~CLevel()
     xr_delete(levelGraphDebugRender);
     xr_delete(m_debug_renderer);
 #endif
-    if (!GEnv.isDedicatedServer)
+//   if (!GEnv.isDedicatedServer)
         GEnv.ScriptEngine->remove_script_process(ScriptProcessor::Level);
     xr_delete(game);
     xr_delete(game_events);
@@ -193,6 +200,9 @@ CLevel::~CLevel()
         StopSaveDemo();
     }
     deinit_compression();
+    xr_delete(m_game_graph);
+    m_chunk->close();
+    FS.r_close(spawn);
 }
 
 shared_str CLevel::name() const { return map_data.m_name; }
@@ -408,10 +418,12 @@ void CLevel::OnFrame()
 #endif
     Fvector temp_vector;
     m_feel_deny.feel_touch_update(temp_vector, 0.f);
+
     if (GameID() != eGameIDSingle)
         psDeviceFlags.set(rsDisableObjectsAsCrows, true);
     else
         psDeviceFlags.set(rsDisableObjectsAsCrows, false);
+
     // commit events from bullet manager from prev-frame
     stats.BulletManagerCommit.Begin();
     BulletManager().CommitEvents();
@@ -438,7 +450,8 @@ void CLevel::OnFrame()
     ProcessGameEvents();
     if (m_bNeed_CrPr)
         make_NetCorrectionPrediction();
-    if (!GEnv.isDedicatedServer)
+   
+    //if (!GEnv.isDedicatedServer)
     {
         if (g_mt_config.test(mtMap))
         {
@@ -457,7 +470,8 @@ void CLevel::OnFrame()
         }
         else
             MapManager().Update();
-        if (IsGameTypeSingle() && Device.dwPrecacheFrame == 0)
+
+        if (Device.dwPrecacheFrame == 0)
         {
             // XXX nitrocaster: was enabled in x-ray 1.5; to be restored or removed
             // if (g_mt_config.test(mtMap))
@@ -551,7 +565,8 @@ void CLevel::OnFrame()
     g_pGamePersistent->Environment().m_paused = m_bEnvPaused;
 #endif
     g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
-    if (!GEnv.isDedicatedServer)
+    
+    //if (!GEnv.isDedicatedServer)
         GEnv.ScriptEngine->script_process(ScriptProcessor::Level)->update();
     m_ph_commander->update();
     m_ph_commander_scripts->UpdateDeferred();
@@ -560,7 +575,7 @@ void CLevel::OnFrame()
     BulletManager().CommitRenderSet();
     stats.BulletManagerCommit.End();
     // update static sounds
-    if (!GEnv.isDedicatedServer)
+    //if (!GEnv.isDedicatedServer)
     {
         if (g_mt_config.test(mtLevelSounds))
         {
@@ -581,7 +596,8 @@ void CLevel::OnFrame()
             m_level_sound_manager->Update();
     }
     // defer LUA-GC-STEP
-    if (!GEnv.isDedicatedServer)
+    
+    //if (!GEnv.isDedicatedServer)
     {
         if (g_mt_config.test(mtLUA_GC))
         {

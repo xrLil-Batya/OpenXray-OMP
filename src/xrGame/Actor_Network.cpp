@@ -57,10 +57,11 @@ u32 g_cl_InterpolationMaxPoints = 0;
 int g_dwInputUpdateDelta = 20;
 BOOL net_cl_inputguaranteed = FALSE;
 CActor* g_actor = NULL;
+CActor* g_single_actor = NULL;
 
 CActor* Actor()
 {
-    R_ASSERT2(GameID() == eGameIDSingle, "Actor() method invokation must be only in Single Player game!");
+    //R_ASSERT2(GameID() == eGameIDSingle, "Actor() method invokation must be only in Single Player game!");
     VERIFY(g_actor);
     /*if (GameID() != eGameIDSingle)
         VERIFY	(g_actor == Level().CurrentControlEntity());*/
@@ -532,7 +533,7 @@ void CActor::net_Import_Physic_proceed()
     CrPr_SetActivated(false);
     CrPr_SetActivationStep(0);
 };
-
+#include "actor_mp_client.h";
 bool CActor::net_Spawn(CSE_Abstract* DC)
 {
     m_holder_id = ALife::_OBJECT_ID(-1);
@@ -548,9 +549,44 @@ bool CActor::net_Spawn(CSE_Abstract* DC)
     // force actor to be local on server client
     CSE_Abstract* e = (CSE_Abstract*)(DC);
     CSE_ALifeCreatureActor* E = smart_cast<CSE_ALifeCreatureActor*>(e);
-    if (OnServer())
+    if (!IsGameTypeSingle())
     {
-        E->s_flags.set(M_SPAWN_OBJECT_LOCAL, TRUE);
+        if (OnServer())
+        {
+            if (!smart_cast<CActorMP*>(this))
+            {
+                E->s_flags.set(M_SPAWN_OBJECT_LOCAL, TRUE);
+                E->s_flags.set(M_SPAWN_OBJECT_ASPLAYER, FALSE);
+                Msg("single_actor_spawn");
+                g_actor = this;
+                g_single_actor = this;
+            }
+        }
+
+        if (OnClient() || (OnServer() && !GEnv.isDedicatedServer))
+        {
+            if (smart_cast<CActorMP*>(this))
+            {
+                if (TRUE == E->s_flags.test(M_SPAWN_OBJECT_LOCAL))
+                {
+                    if (TRUE == E->s_flags.test(M_SPAWN_OBJECT_ASPLAYER))
+                    {
+                        Msg("mp_actor_spawn");
+                        g_actor = this;
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        if (OnServer())
+        {
+            E->s_flags.set(M_SPAWN_OBJECT_LOCAL, TRUE);
+        }
+
+        if (TRUE == E->s_flags.test(M_SPAWN_OBJECT_LOCAL) && TRUE == E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
+            g_actor = this;
     }
 
     if (TRUE == E->s_flags.test(M_SPAWN_OBJECT_LOCAL) && TRUE == E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
@@ -777,14 +813,25 @@ void CActor::net_Destroy()
         CurrentGameUI()->UIMainIngameWnd->UIArtefactPanel->InitIcons(m_ArtefactsOnBelt);
 
     SetDefaultVisualOutfit(NULL);
-
+ 
     if (g_actor == this)
+    {
+        Msg("g_actor set to NULL");
         g_actor = NULL;
+    }
+
+    if (g_single_actor == this)
+    {
+        Msg("g_single_actor set to NULL");
+        g_single_actor = NULL;
+    }
 
     Engine.Sheduler.Unregister(this);
 
     if (actor_camera_shell && actor_camera_shell->get_ElementByStoreOrder(0)->PhysicsRefObject() == this)
         destroy_physics_shell(actor_camera_shell);
+   
+
 }
 
 void CActor::net_Relcase(IGameObject* O)

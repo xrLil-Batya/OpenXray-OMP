@@ -76,6 +76,8 @@ enum
     M_CREATE_PLAYER_STATE,
     M_COMPRESSED_UPDATE_OBJECTS,
 
+
+
     MSG_FORCEDWORD = u32(-1)
 };
 
@@ -156,6 +158,14 @@ enum
 
     GEG_PLAYER_USE_BOOSTER,
     GE_REQUEST_PLAYERS_INFO,
+    
+    // freemp
+    GE_DETECTOR_STATE_CHANGE,
+    M_SCRIPT,
+    GEG_PLAYER_USE_OBJECT,
+    GEG_WEAPON_REPAIR,
+   
+
 
     GE_FORCEDWORD = u32(-1)
 };
@@ -251,3 +261,22 @@ enum enum_connection_results
     ecr_have_been_banned,
     ecr_profile_error,
 }; // enum enum_connection_results
+
+
+enum enum_script_mp_events
+{
+    MP_Surge,
+    MP_SurgeStop,
+    MP_Door,
+    MP_DoorClose,
+
+    MP_DoorEvent,
+
+    MP_Install_Upgrade,
+    MP_Exports_Upgrade,
+    MP_USE,
+    MP_Togle_detector,
+    MP_GIVEINFO,
+
+    GE_ALL = u32(-1)
+};

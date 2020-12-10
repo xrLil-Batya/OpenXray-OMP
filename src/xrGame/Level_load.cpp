@@ -18,12 +18,34 @@ bool CLevel::Load_GameSpecific_Before()
     g_pGamePersistent->SetLoadStageTitle("st_loading_ai_objects");
     g_pGamePersistent->LoadTitle();
     string_path fn_game;
+    
+    shared_str level = name().c_str();
 
-    if (GamePersistent().GameType() == eGameIDSingle && !ai().get_alife() && FS.exist(fn_game, "$level$", "level.ai") &&
-        !net_Hosts.empty())
+    if (OnClient())
+    {
+        FS.exist(fn_game, "$game_spawn$", *level, ".spawn");
+
+        spawn = FS.r_open(fn_game);
+
+        IReader* chunk;
+
+        chunk = spawn->open_chunk(3);
+        R_ASSERT2(chunk, "Spawn version mismatch - REBUILD SPAWN!");
+        ai().patrol_path_storage(*chunk);
+        chunk->close();
+
+        m_chunk = spawn->open_chunk(4);
+        R_ASSERT2(m_chunk, "Spawn version mismatch - REBUILD SPAWN!");
+      
+        m_game_graph = xr_new<CGameGraph>(m_chunk);
+        ai().SetGameGraph(m_game_graph);
+    }
+
+
+    if (!ai().get_alife() && FS.exist(fn_game, "$level$", "level.ai") && !net_Hosts.empty())
         ai().load(net_SessionName());
 
-    if (!GEnv.isDedicatedServer && !ai().get_alife() && ai().get_game_graph() && FS.exist(fn_game, "$level$", "level.game"))
+    if (!ai().get_alife() && ai().get_game_graph() && FS.exist(fn_game, "$level$", "level.game"))
     {
         IReader* stream = FS.r_open(fn_game);
         ai().patrol_path_storage_raw(*stream);
@@ -138,7 +160,7 @@ bool CLevel::Load_GameSpecific_After()
         }
     }
 
-    if (!GEnv.isDedicatedServer)
+    //if (!GEnv.isDedicatedServer)
     {
         // loading scripts
         auto& scriptEngine = *GEnv.ScriptEngine;

@@ -61,7 +61,7 @@ void CObjectFactory::register_script_class(LPCSTR unknown_class, LPCSTR clsid, L
 void CObjectFactory::register_script_classes()
 {
 #ifndef NO_XR_GAME
-    if (!GEnv.isDedicatedServer)
+    //if (!GEnv.isDedicatedServer)
 #endif // NO_XR_GAME
         ai();
 }

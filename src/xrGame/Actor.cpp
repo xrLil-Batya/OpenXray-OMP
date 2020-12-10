@@ -199,7 +199,7 @@ CActor::CActor() : CEntityAlive(), current_ik_cam_shift(0)
     m_iLastHittingWeaponID = u16(-1);
     m_statistic_manager = NULL;
     //-----------------------------------------------------------------------------------
-    m_memory = GEnv.isDedicatedServer ? 0 : xr_new<CActorMemory>(this);
+    m_memory = xr_new<CActorMemory>(this);
     m_bOutBorder = false;
     m_hit_probability = 1.f;
     m_feel_touch_characters = 0;
@@ -1344,7 +1344,7 @@ void CActor::shedule_Update(u32 DT)
         m_pVehicleWeLookingAt = smart_cast<CHolderCustom*>(game_object);
         CEntityAlive* pEntityAlive = smart_cast<CEntityAlive*>(game_object);
 
-        if (GameID() == eGameIDSingle)
+        if (/*GameID() == eGameIDSingle*/true)
         {
             if (m_pUsableObject && m_pUsableObject->tip_text())
             {
