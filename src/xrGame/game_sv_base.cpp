@@ -24,10 +24,10 @@ u32 g_sv_base_dwRPointFreezeTime = 0;
 int g_sv_base_iVotingEnabled = 0x00ff;
 //-----------------------------------------------------------------
 
-extern const xr_token round_end_result_str[] = {{"Finish", int(eRoundEnd_Finish)}, {"Game restarted", int(eRoundEnd_GameRestarted)},
-    {"Game restarted fast", int(eRoundEnd_GameRestartedFast)}, {"Time limit", int(eRoundEnd_TimeLimit)},
-    {"Frag limit", int(eRoundEnd_FragLimit)}, {"Artefact limit", int(eRoundEnd_ArtrefactLimit)}, {"Unknown", int(eRoundEnd_Force)},
-    {0, 0}};
+extern const xr_token round_end_result_str[] = {{"Finish", int(eRoundEnd_Finish)},
+    {"Game restarted", int(eRoundEnd_GameRestarted)}, {"Game restarted fast", int(eRoundEnd_GameRestartedFast)},
+    {"Time limit", int(eRoundEnd_TimeLimit)}, {"Frag limit", int(eRoundEnd_FragLimit)},
+    {"Artefact limit", int(eRoundEnd_ArtrefactLimit)}, {"Unknown", int(eRoundEnd_Force)}, {0, 0}};
 
 // Main
 /*game_PlayerState*	game_sv_GameState::get_it					(u32 it)
@@ -378,33 +378,38 @@ void game_sv_GameState::Create(shared_str& options)
                             "Problem with CTA Team indexes. Propably you have added rpoint of team 0 for cta game "
                             "type.");
                     }
-                    if ((!(GameType & eGameIDDeathmatch) && (Type() == eGameIDDeathmatch)) ||
-                        (!(GameType & eGameIDTeamDeathmatch) && (Type() == eGameIDTeamDeathmatch)) ||
-                        (!(GameType & eGameIDArtefactHunt) && (Type() == eGameIDArtefactHunt)) ||
-                        (!(GameType & eGameIDCaptureTheArtefact) && (Type() == eGameIDCaptureTheArtefact)))
-                    {
-                        continue;
-                    };
+                    if (!(Type() == eGameIDFreemp))
+                        if ((!(GameType & eGameIDDeathmatch) && (Type() == eGameIDDeathmatch)) ||
+                            (!(GameType & eGameIDTeamDeathmatch) && (Type() == eGameIDTeamDeathmatch)) ||
+                            (!(GameType & eGameIDArtefactHunt) && (Type() == eGameIDArtefactHunt)) ||
+                            (!(GameType & eGameIDCaptureTheArtefact) && (Type() == eGameIDCaptureTheArtefact)))
+                        {
+                            continue;
+                        };
+
                 };
+
                 switch (type)
                 {
-                case rptActorSpawn:
-                {
-                    rpoints[team].push_back(R);
-                    for (int i = 0; i < int(rpoints[team].size()) - 1; i++)
+                    case rptActorSpawn:
                     {
-                        RPoint rp = rpoints[team][i];
-                        float dist = R.P.distance_to_xz(rp.P) / 2;
-                        if (dist < rpoints_MinDist[team])
-                            rpoints_MinDist[team] = dist;
-                        dist = R.P.distance_to(rp.P) / 2;
-                        if (dist < rpoints_Dist[team])
-                            rpoints_Dist[team] = dist;
-                    };
-                }
-                break;
-                case rptItemSpawn: { m_item_respawner.add_new_rpoint(rp_profile, R);
-                }
+                        rpoints[team].push_back(R);
+                        for (int i = 0; i < int(rpoints[team].size()) - 1; i++)
+                        {
+                            RPoint rp = rpoints[team][i];
+                            float dist = R.P.distance_to_xz(rp.P) / 2;
+                            if (dist < rpoints_MinDist[team])
+                                rpoints_MinDist[team] = dist;
+                            dist = R.P.distance_to(rp.P) / 2;
+                            if (dist < rpoints_Dist[team])
+                                rpoints_Dist[team] = dist;
+                        };
+                    }
+                    break;
+                    case rptItemSpawn:
+                    {
+                        m_item_respawner.add_new_rpoint(rp_profile, R);
+                    }
                 };
             };
             O->close();
@@ -413,7 +418,6 @@ void game_sv_GameState::Create(shared_str& options)
         FS.r_close(F);
     }
 
-    
     // loading scripts
     auto& scriptEngine = *GEnv.ScriptEngine;
     scriptEngine.remove_script_process(ScriptProcessor::Game);
@@ -432,7 +436,6 @@ void game_sv_GameState::Create(shared_str& options)
         scriptEngine.add_script_process(ScriptProcessor::Game, scriptEngine.CreateScriptProcess("game", scripts));
     }
     xr_delete(l_tpIniFile);
-     
 
     //---------------------------------------------------------------------
     ConsoleCommands_Create();
@@ -511,10 +514,11 @@ void game_sv_GameState::assign_RP(CSE_Abstract* E, game_PlayerState* ps_who)
     }
     R_ASSERT2(l_uc_team < TEAM_COUNT, make_string("not found rpoint for team [%d]", l_uc_team).c_str());
 
-    xr_vector<RPoint>& rp = rpoints[l_uc_team];
-#ifdef DEBUG
-    Msg("---Size of rpoints of team [%d] is [%d]", l_uc_team, rp.size());
-#endif
+    xr_vector<RPoint>& rp = rpoints[1];
+//#ifdef DEBUG
+
+    Msg("---Size of rpoints of team [%d] is [%d]", 0, rp.size());
+//#endif
     //-----------------------------------------------------------
     xr_vector<u32> xrp; //	= rpoints[l_uc_team];
     for (u32 i = 0; i < rp.size(); i++)
@@ -542,6 +546,7 @@ void game_sv_GameState::assign_RP(CSE_Abstract* E, game_PlayerState* ps_who)
 #ifdef DEBUG
     Msg("--- Result rpoint is [%d]", rpoint);
 #endif // #ifdef DEBUG
+    
     RPoint& r = rp[rpoint];
     if (!tpSpectator)
     {
@@ -614,7 +619,7 @@ void game_sv_GameState::Update()
         m_item_respawner.update(Level().timeServer());
     }
 
-    //if (!GEnv.isDedicatedServer)
+    // if (!GEnv.isDedicatedServer)
     {
         if (Level().game)
         {
@@ -644,8 +649,8 @@ game_sv_GameState::game_sv_GameState()
 
 game_sv_GameState::~game_sv_GameState()
 {
-    //if (!GEnv.isDedicatedServer)
-        GEnv.ScriptEngine->remove_script_process(ScriptProcessor::Game);
+    // if (!GEnv.isDedicatedServer)
+    GEnv.ScriptEngine->remove_script_process(ScriptProcessor::Game);
     xr_delete(m_event_queue);
 
     SaveMapList();
@@ -700,7 +705,8 @@ void game_sv_GameState::OnEvent(NET_Packet& tNetPacket, u16 type, u32 time, Clie
     }
     break;
 
-    case GAME_EVENT_PLAYER_KILLED: {
+    case GAME_EVENT_PLAYER_KILLED:
+    {
     }
     break;
     case GAME_EVENT_ON_HIT:
@@ -837,10 +843,14 @@ void game_sv_GameState::AddDelayedEvent(NET_Packet& tNetPacket, u16 type, u32 ti
     case GAME_EVENT_VOTE_YES:
     case GAME_EVENT_VOTE_NO:
     case GAME_EVENT_PLAYER_AUTH:
-    case GAME_EVENT_CREATE_PLAYER_STATE: { m_event_queue->Create(tNetPacket, type, time, sender);
+    case GAME_EVENT_CREATE_PLAYER_STATE:
+    {
+        m_event_queue->Create(tNetPacket, type, time, sender);
     }
     break;
-    default: { m_event_queue->CreateSafe(tNetPacket, type, time, sender);
+    default:
+    {
+        m_event_queue->CreateSafe(tNetPacket, type, time, sender);
     }
     break;
     }

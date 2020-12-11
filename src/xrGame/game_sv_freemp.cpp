@@ -24,7 +24,7 @@ void game_sv_freemp::Create(shared_str& options)
         Msg("Multiplayer>> alife.spawn not found! No A-life");
     }
 
-    R_ASSERT2(rpoints[1].size(), "rpoints for players not found");
+//    R_ASSERT2(rpoints[1].size(), "rpoints for players not found");
 
     switch_Phase(GAME_PHASE_PENDING);
 

@@ -10,6 +10,8 @@
 #include "xrNetServer/NET_Messages.h"
 #include "xrServerEntities/xrMessages.h"
 
+#include "game_sv_freemp.h"
+
 xr_string xrServer::ent_name_safe(u16 eid)
 {
     string1024 buff;
@@ -101,9 +103,23 @@ void xrServer::Process_event_destroy(NET_Packet& P, ClientID sender, u32 time, u
     if (e_dest->m_bALifeControl && ai().get_alife())
     {
         game_sv_Single* _game = smart_cast<game_sv_Single*>(game);
-        VERIFY(_game);
+        game_sv_freemp* _gameFreemp = smart_cast<game_sv_freemp*>(game);
+
         if (ai().alife().objects().object(id_dest, true))
-            _game->alife().release(e_dest, false);
+        {   
+            if (IsGameTypeSingle())
+            {
+                VERIFY(_game);
+                _game->alife().release(e_dest, false);
+            } 
+            else
+            {
+                VERIFY(_gameFreemp);
+                _gameFreemp->alife().release(e_dest, false);
+            }
+                
+        }
+           
     }
 
     if (game)

@@ -550,9 +550,17 @@ u32 CSE_ALifeObject::ef_detector_type() const
 bool CSE_ALifeObject::used_ai_locations() const /* noexcept */
 { return !!m_flags.is(flUsedAI_Locations); }
 bool CSE_ALifeObject::can_switch_online() const /* noexcept */
-{ return match_configuration() && !!m_flags.is(flSwitchOnline); }
+{
+    
+    //return match_configuration() && !!m_flags.is(flSwitchOnline);
+    return true;
+}
 bool CSE_ALifeObject::can_switch_offline() const /* noexcept */
-{ return !match_configuration() || !!m_flags.is(flSwitchOffline); }
+{ 
+    
+    //return !match_configuration() || !!m_flags.is(flSwitchOffline); 
+    return false;
+}
 bool CSE_ALifeObject::can_save() const /* noexcept */
 { return !!m_flags.is(flCanSave); }
 bool CSE_ALifeObject::interactive() const /* noexcept */

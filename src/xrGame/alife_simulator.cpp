@@ -65,7 +65,7 @@ CALifeSimulator::CALifeSimulator(IPureServer* server, shared_str* command_line)
     }
     else
     {
-        load("alife", false, true);
+        load(p.m_game_or_spawn, false, true);
     }
 
 }

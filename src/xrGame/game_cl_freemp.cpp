@@ -5,15 +5,23 @@
 #include "UIGameFMP.h"
 #include "actor_mp_client.h"
 
-game_cl_freemp::game_cl_freemp() {}
+game_cl_freemp::game_cl_freemp() { 
+    
+    m_game_ui = NULL;
 
-game_cl_freemp::~game_cl_freemp() {}
+}
+
+game_cl_freemp::~game_cl_freemp()
+{
+
+
+}
 
 CUIGameCustom* game_cl_freemp::createGameUI()
 {
     if (GEnv.isDedicatedServer)
         return NULL;
- 
+
     CLASS_ID clsid = CLSID_GAME_UI_FREEMP;
     m_game_ui = smart_cast<CUIGameFMP*>(NEW_INSTANCE(clsid));
     R_ASSERT(m_game_ui);
@@ -150,7 +158,7 @@ void game_cl_freemp::shedule_Update(u32 dt)
         if (!pActor || !pActor->g_Alive())
             continue;
 
-        //pActor->SetName(ps->getName());
+        // pActor->SetName(ps->getName());
 
         pActor->cName_set(ps->getName());
 

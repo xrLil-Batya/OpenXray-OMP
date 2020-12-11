@@ -37,7 +37,7 @@ bool CLevel::Load_GameSpecific_Before()
         m_chunk = spawn->open_chunk(4);
         R_ASSERT2(m_chunk, "Spawn version mismatch - REBUILD SPAWN!");
       
-        m_game_graph = xr_new<CGameGraph>(m_chunk);
+        m_game_graph = xr_new<CGameGraph>(*m_chunk);
         ai().SetGameGraph(m_game_graph);
     }
 

@@ -222,7 +222,7 @@ void CObjectFactory::register_classes()
     add<CUIGameTDM>(CLSID_GAME_UI_TEAMDEATHMATCH, "game_ui_team_deathmatch");
     add<CUIGameAHunt>(CLSID_GAME_UI_ARTEFACTHUNT, "game_ui_artefact_hunt");
     add<CUIGameCTA>(CLSID_GAME_UI_CAPTURETHEARTEFACT, "game_ui_capture_the_artefact");
-    add<CUIGameFMP>(CLSID_GAME_UI_CAPTURETHEARTEFACT, "game_ui_freemp");
+    add<CUIGameFMP>(CLSID_GAME_UI_FREEMP, "game_ui_freemp");
     
 #endif // NO_XR_GAME
 

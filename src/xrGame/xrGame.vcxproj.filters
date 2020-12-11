@@ -2254,6 +2254,15 @@
     <Filter Include="UI\Multiplayer\MM_MP\VersionList">
       <UniqueIdentifier>{04c90fd3-e247-4f21-b715-8dc556986837}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Server\Games\server\freemp">
+      <UniqueIdentifier>{2010698f-dc57-426e-81e4-aea823efa274}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Server\Games\client\freemp">
+      <UniqueIdentifier>{3f3105b5-b7a2-450e-8b0d-c3d642eb842a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\GameTypes\FMP">
+      <UniqueIdentifier>{c7288a9f-c4bf-4c93-a341-112b436d7b6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -6504,6 +6513,15 @@
     <ClInclude Include="ui\UIArtefactPanel.h">
       <Filter>UI\Common\MainIngame</Filter>
     </ClInclude>
+    <ClInclude Include="game_sv_freemp.h">
+      <Filter>Core\Server\Games\server\freemp</Filter>
+    </ClInclude>
+    <ClInclude Include="game_cl_freemp.h">
+      <Filter>Core\Server\Games\client\freemp</Filter>
+    </ClInclude>
+    <ClInclude Include="UIGameFMP.h">
+      <Filter>UI\GameTypes\FMP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -9874,6 +9892,15 @@
     </ClCompile>
     <ClCompile Include="ui\UIArtefactPanel.cpp">
       <Filter>UI\Common\MainIngame</Filter>
+    </ClCompile>
+    <ClCompile Include="game_sv_freemp.cpp">
+      <Filter>Core\Server\Games\server\freemp</Filter>
+    </ClCompile>
+    <ClCompile Include="game_cl_freemp.cpp">
+      <Filter>Core\Server\Games\client\freemp</Filter>
+    </ClCompile>
+    <ClCompile Include="UIGameFMP.cpp">
+      <Filter>UI\GameTypes\FMP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

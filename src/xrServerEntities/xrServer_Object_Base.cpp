@@ -240,6 +240,7 @@ enum EGameTypes {
     GAME_TEAMDEATHMATCH = 6,
     GAME_ARTEFACTHUNT = 7,
     GAME_CAPTURETHEARTEFACT = 8,
+    GAME_FREEMP = 9,
 
     // identifiers in range [100...254] are registered for script game type
     GAME_DUMMY = 255 // temporary game type
@@ -378,9 +379,14 @@ LPCSTR CSE_Abstract::name_replace() const { return (s_name_replace); }
 Fvector& CSE_Abstract::position() { return (o_Position); }
 Fvector& CSE_Abstract::angle() { return (o_Angle); }
 Flags16& CSE_Abstract::flags() { return (s_flags); }
-const xr_token game_types[] = {{"any_game", eGameIDNoGame}, {"single", eGameIDSingle}, {"deathmatch", eGameIDDeathmatch},
-    {"team_deathmatch", eGameIDTeamDeathmatch}, {"artefacthunt", eGameIDArtefactHunt},
+const xr_token game_types[] = {
+    {"any_game", eGameIDNoGame}, 
+    {"single", eGameIDSingle}, 
+    {"deathmatch", eGameIDDeathmatch},
+    {"team_deathmatch", eGameIDTeamDeathmatch}, 
+    {"artefacthunt", eGameIDArtefactHunt},
     {"capture_the_artefact", eGameIDCaptureTheArtefact},
+    {"freemp", eGameIDFreemp},
     // eGameIDDominationZone
     // eGameIDTeamDominationZone
     {nullptr, 0}};

@@ -45,14 +45,19 @@ public:
 
     WeaponUsageStatistic* m_WeaponUsageStatistic;
 
+    virtual void TranslateGameMessage(u32 msg, NET_Packet& P);
+
+    virtual void TranslateGameMessageScript(u32 msg, NET_Packet& P);
+
+
+
 private:
     void switch_Phase(u32 new_phase) { inherited::switch_Phase(new_phase); };
 protected:
     virtual void OnSwitchPhase(u32 old_phase, u32 new_phase);
 
     // for scripting enhancement
-    virtual void TranslateGameMessage(u32 msg, NET_Packet& P);
-    virtual void TranslateGameMessageScript(u32 msg, NET_Packet& P);
+   
 
     virtual shared_str shedule_Name() const { return shared_str("game_cl_GameState"); };
     virtual float shedule_Scale() { return 1.0f; };

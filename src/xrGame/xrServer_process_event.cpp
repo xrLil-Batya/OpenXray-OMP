@@ -5,6 +5,8 @@
 #include "xrServer_Objects.h"
 #include "game_base.h"
 #include "game_cl_base.h"
+#include "game_sv_freemp.h"
+
 #include "ai_space.h"
 #include "alife_object_registry.h"
 #include "xrServer_Objects_ALife_Items.h"
@@ -356,6 +358,216 @@ void xrServer::Process_event(NET_Packet& P, ClientID sender)
     case GE_REQUEST_PLAYERS_INFO: { SendPlayersInfo(sender);
     }
     break;
-    default: R_ASSERT2(0, "Game Event not implemented!!!"); break;
+    
+    case M_SCRIPT:
+    {
+        // Msg("[SurgeMenager]SendBroadcost = " + P.r_eof());
+            u32 event;
+            P.r_u32(event);
+
+            NET_Packet packet;
+
+            packet.w_begin(M_SCRIPT);
+
+            switch (event)
+            {
+            case (MP_Surge):
+            {
+                // packet.w_u32(MP_Surge);
+                // Msg("PacketReciveServer MP_Surge");
+                // SendBroadcast(sender, packet, net_flags(TRUE, TRUE));
+                game_sv_freemp* freemp = smart_cast<game_sv_freemp*>(game);
+                freemp->OnSurgeStart();
+            }
+            break;
+
+            case (MP_SurgeStop):
+            {
+                // packet.w_u32(MP_SurgeStop);
+                // Msg("PacketReciveServer MP_SurgeStop");
+                // SendBroadcast(sender, packet, net_flags(TRUE, TRUE));
+                game_sv_freemp* freemp = smart_cast<game_sv_freemp*>(game);
+                freemp->OnSurgeStop();
+            }
+            break;
+
+            case (MP_Door):
+            {
+                packet.w_u32(MP_Door);
+                u32 id;
+                P.r_u32(id);
+                u8 sound;
+                P.r_u8(sound);
+
+                packet.w_u32(id);
+                packet.w_u8(sound);
+                // Log("PacketReciveServer MP_Door = ", id);
+                SendBroadcast(sender, packet, net_flags(TRUE, TRUE));
+                /*
+                    luabind::functor<void>	funct;
+                    R_ASSERT(ai().script_engine().functor("ph_door.change_door_state_on_server", funct));
+                    funct(id, true, sound ? true : false);
+                */
+                // SendTo(sender, packet, net_flags(TRUE, TRUE));
+            }
+            break;
+
+            case (MP_DoorClose):
+            {
+                packet.w_u32(MP_DoorClose);
+                u32 id;
+                P.r_u32(id);
+                u8 sound;
+                P.r_u8(sound);
+
+                packet.w_u32(id);
+                packet.w_u8(sound);
+                // Log("PacketReciveServer MP_DoorClose = ", id);
+                SendBroadcast(sender, packet, net_flags(TRUE, TRUE));
+
+                /*
+                    luabind::functor<void>	funct;
+                    R_ASSERT(ai().script_engine().functor("ph_door.change_door_state_on_server", funct));
+                    funct(id, false, sound ? true : false);
+                */
+
+                // SendTo(sender, packet, net_flags(TRUE, TRUE));
+            }
+            break;
+
+            case (MP_DoorEvent):
+            {
+                u32 id;
+                P.r_u32(id);
+
+                // Log("PacketReciveServer MP_DoorEvent = ", id);
+
+                game_sv_freemp* freemp = smart_cast<game_sv_freemp*>(game);
+
+                freemp->TryDoor(id);
+                /*
+                if (OnClient()) {
+                    NET_Packet packet;
+                    game_cl_GameState* game = smart_cast<game_cl_GameState*>(Level().game);
+                    game->u_EventGen(packet, M_EVENT, m_object.ID());
+
+                    packet.w_u32(M_SCRIPT);
+                    packet.w_u32(MP_DoorEvent);
+                    game->u_EventSend(packet);
+                }
+                */
+            }
+            break;
+
+            case (MP_Exports_Upgrade):
+            {
+                u32 id;
+
+                P.r_u32(id);
+                Msg("MP_Exports_Upgrade = [RecivedServer]");
+
+                CSE_Abstract* item = game->get_entity_from_eid(id);
+
+                CSE_ALifeInventoryItem* itemInventory = smart_cast<CSE_ALifeInventoryItem*>(item);
+
+                xr_vector<shared_str> updates = itemInventory->m_upgrades;
+
+                u32 position;
+
+                NET_Packet packet;
+
+                xr_vector<shared_str>::iterator ib = updates.begin();
+                xr_vector<shared_str>::iterator ie = updates.end();
+
+                // packet.w_chunk_open16(position);
+                for (; ib != ie; ++ib)
+                {
+                    /*
+                    shared_str name = (*ib).c_str();
+                    Msg("Name = [%s]",name);
+                    packet.w_stringZ(name);
+                    */
+
+                    NET_Packet p;
+                    p.w_begin(M_SCRIPT);
+                    p.w_u32(MP_Install_Upgrade);
+                    p.w_u16(destination);
+                    p.w_stringZ((*ib));
+                    SendBroadcast(sender, packet, net_flags(TRUE, TRUE));
+                }
+                // packet.w_chunk_close16(position);
+            }
+            break;
+
+            case MP_USE:
+            {
+                u16 idObject;
+
+                P.r_u16(idObject);
+
+                Log("ActorUseObject[Server] = ", destination);
+                NET_Packet tmp_packet;
+                CGameObject::u_EventGen(tmp_packet, GEG_PLAYER_USE_OBJECT, destination);
+
+                tmp_packet.w_u16(idObject);
+
+                SendTo(SV_Client->ID, tmp_packet, net_flags(TRUE, TRUE));
+            }
+            break;
+
+                /*
+                case MP_REPAIR:
+                {
+                    u16 id;
+                    P.r_u16(id);
+
+                    CSE_Abstract* item = game->get_entity_from_eid(id);
+                    CSE_ALifeInventoryItem* ItemInvent = smart_cast<CSE_ALifeInventoryItem*>(item);
+
+                    if (item) {
+                        Msg("Repair item");
+                        ItemInvent->setCondition(1.0f);
+                    }
+                }break;
+                */
+
+            case MP_GIVEINFO:
+            {
+                shared_str info;
+                P.r_stringZ(info);
+
+                NET_Packet packet;
+                packet.w_begin(M_SCRIPT);
+                packet.w_u32(MP_GIVEINFO);
+                packet.w_stringZ(info);
+                SendBroadcast(SV_Client->ID, packet, net_flags(TRUE, TRUE));
+            }
+
+            default: break;
+            }
+    }
+    break;
+
+    case GEG_WEAPON_REPAIR:
+    {
+        NET_Packet packet;
+        packet.w_begin(M_SCRIPT);
+        packet.w_u32(GEG_WEAPON_REPAIR);
+        packet.w_u16(destination);
+        SendTo(SV_Client->ID, packet, net_flags(TRUE, TRUE, FALSE, TRUE));
+    }
+    break;
+
+    case GE_DETECTOR_STATE_CHANGE:
+    {
+        // Msg("GE_DETECTOR_STATE_CHANGE");
+        // SendTo(SV_Client->ID, P, net_flags(TRUE, TRUE, FALSE, TRUE));
+        SendTo(sender, P, net_flags(TRUE, TRUE, FALSE, TRUE));
+    }
+    break;
+
+    default:
+        Msg("Game Event not implemented!!!"); 
+        break;
     }
 }

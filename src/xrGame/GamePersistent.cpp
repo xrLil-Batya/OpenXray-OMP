@@ -173,10 +173,7 @@ CGamePersistent::~CGamePersistent(void)
     Engine.Event.Handler_Detach(eQuickLoad, this);
 }
 
-void CGamePersistent::PreStart(LPCSTR op)
-{
-    inherited::PreStart(op);
-}
+void CGamePersistent::PreStart(LPCSTR op) { inherited::PreStart(op); }
 
 void CGamePersistent::RegisterModel(IRenderVisual* V)
 {
@@ -221,24 +218,23 @@ void CGamePersistent::OnAppStart()
 #ifndef XR_PLATFORM_WINDOWS
     init_game_globals();
 #else
-    TaskScheduler->AddTask("init_game_globals()", init_game_globals,
-        nullptr, nullptr, &globalsInitialized);
+    TaskScheduler->AddTask("init_game_globals()", init_game_globals, nullptr, nullptr, &globalsInitialized);
 #endif
     // load game materials
-    TaskScheduler->AddTask("GMLib.Load()", [&]()
-    {
-        GEnv.Render->MakeContextCurrent(IRender::HelperContext); // free to use, so let's use it
-        GMLib.Load();
-        GEnv.Render->MakeContextCurrent(IRender::NoContext); // release it for other users
-    }, nullptr, nullptr, &materialsLoaded);
+    TaskScheduler->AddTask(
+        "GMLib.Load()",
+        [&]() {
+            GEnv.Render->MakeContextCurrent(IRender::HelperContext); // free to use, so let's use it
+            GMLib.Load();
+            GEnv.Render->MakeContextCurrent(IRender::NoContext); // release it for other users
+        },
+        nullptr, nullptr, &materialsLoaded);
 
     SetupUIStyle();
     GEnv.UI = xr_new<UICore>();
 
-    TaskScheduler->AddTask("CMainMenu::CMainMenu()", [&]()
-    {
-        m_pMainMenu = xr_new<CMainMenu>();
-    }, nullptr, nullptr, &menuCreated);
+    TaskScheduler->AddTask(
+        "CMainMenu::CMainMenu()", [&]() { m_pMainMenu = xr_new<CMainMenu>(); }, nullptr, nullptr, &menuCreated);
 
     inherited::OnAppStart();
 
@@ -250,7 +246,6 @@ void CGamePersistent::OnAppStart()
     ansel->Load();
     ansel->Init();
 #endif
-
 
 #ifdef XR_PLATFORM_WINDOWS
     Device.WaitEvent(globalsInitialized);
@@ -310,7 +305,8 @@ LPCSTR GameTypeToString(EGameIDs gt, bool bShort)
     case eGameIDCaptureTheArtefact: return (bShort) ? "cta" : "capturetheartefact"; break;
     case eGameIDDominationZone: return (bShort) ? "dz" : "dominationzone"; break;
     case eGameIDTeamDominationZone: return (bShort) ? "tdz" : "teamdominationzone"; break;
-    default: return "---";
+    case eGameIDFreemp: return (bShort) ? "fmp" : "freemp"; break;
+    default : return "---";
     }
 }
 
@@ -395,7 +391,8 @@ void CGamePersistent::WeathersUpdate()
                     VERIFY(snd._handle());
                     const u32 _length_ms = iFloor(snd.get_length_sec() * 1000.0f);
                     ambient_sound_next_time[idx] = Device.dwTimeGlobal + _length_ms + ch.get_rnd_sound_time();
-                    //Msg("- Playing ambient sound channel [%s] file[%s]", ch.m_load_section.c_str(), snd._handle()->file_name());
+                    // Msg("- Playing ambient sound channel [%s] file[%s]", ch.m_load_section.c_str(),
+                    // snd._handle()->file_name());
                 }
             }
 
@@ -521,10 +518,7 @@ bool allow_intro()
         return true;
 }
 
-bool allow_game_intro()
-{
-    return !strstr(Core.Params, "-nogameintro");
-}
+bool allow_game_intro() { return !strstr(Core.Params, "-nogameintro"); }
 
 void CGamePersistent::start_logo_intro()
 {
@@ -602,10 +596,7 @@ void CGamePersistent::start_game_intro()
     }
 }
 
-void CGamePersistent::update_game_intro()
-{
-    xr_delete(m_intro);
-}
+void CGamePersistent::update_game_intro() { xr_delete(m_intro); }
 
 extern CUISequencer* g_tutorial;
 extern CUISequencer* g_tutorial2;

@@ -431,3 +431,9 @@ void game_cl_GameState::set_type_name(LPCSTR s)
 };
 
 void game_cl_GameState::OnConnected() { m_game_ui_custom = CurrentGameUI(); }
+
+void game_cl_GameState::TranslateGameMessageScript(u32 msg, NET_Packet& P)
+{
+    Log("Recive Messege = ", msg);
+    R_ASSERT2(msg, "Unknown Game Message");
+}

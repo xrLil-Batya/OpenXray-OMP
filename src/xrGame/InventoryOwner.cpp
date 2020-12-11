@@ -102,7 +102,7 @@ void CInventoryOwner::reinit()
     m_item_to_spawn = shared_str();
     m_ammo_in_box_to_spawn = 0;
 }
-
+#include "actor_mp_server.h"
 // call this after CGameObject::net_Spawn
 bool CInventoryOwner::net_Spawn(CSE_Abstract* DC)
 {
@@ -121,7 +121,7 @@ bool CInventoryOwner::net_Spawn(CSE_Abstract* DC)
         return FALSE;
     CSE_Abstract* E = (CSE_Abstract*)(DC);
 
-    if (IsGameTypeSingle())
+    if (IsGameTypeSingle() || !smart_cast<CSE_ActorMP*>(E))
     {
         CSE_ALifeTraderAbstract* pTrader = NULL;
         if (E)
@@ -347,8 +347,7 @@ void CInventoryOwner::spawn_supplies()
         return;
 
     if (use_bolts())
-        Level().spawn_item(
-            "bolt", game_object->Position(), game_object->ai_location().level_vertex_id(), game_object->ID());
+        Level().spawn_item("bolt", game_object->Position(), game_object->ai_location().level_vertex_id(), game_object->ID());
 
     if (!ai().get_alife() && IsGameTypeSingle())
     {
@@ -385,15 +384,18 @@ void CInventoryOwner::SetCommunity(CHARACTER_COMMUNITY_INDEX new_community)
     CEntityAlive* EA = smart_cast<CEntityAlive*>(this);
     VERIFY(EA);
 
-    CSE_Abstract* e_entity = ai().alife().objects().object(EA->ID(), false);
-    if (!e_entity)
-        return;
 
     CharacterInfo().SetCommunity(new_community);
+
     if (EA->g_Alive())
     {
         EA->ChangeTeam(CharacterInfo().Community().team(), EA->g_Squad(), EA->g_Group());
     }
+
+    CSE_Abstract* e_entity = ai().alife().objects().object(EA->ID(), false);
+    if (!e_entity)
+        return;
+
 
     CSE_ALifeTraderAbstract* trader = smart_cast<CSE_ALifeTraderAbstract*>(e_entity);
     if (!trader)

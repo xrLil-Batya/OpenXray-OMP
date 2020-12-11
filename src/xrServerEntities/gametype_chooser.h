@@ -46,8 +46,7 @@ inline EGameIDs ParseStringToGameType(pcstr str)
     if (IS("capturetheartefact") || IS("cta")) return eGameIDCaptureTheArtefact;
     if (IS("dominationzone"))                  return eGameIDDominationZone;
     if (IS("teamdominationzone"))              return eGameIDTeamDominationZone;
-    if (IS("fmp"))
-        return eGameIDFreemp;
+    if (IS("fmp") || IS("freemp"))             return eGameIDFreemp;
     return eGameIDNoGame; //EGameIDs
 }
 
