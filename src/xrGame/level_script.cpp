@@ -728,6 +728,7 @@ void GiveInfoToClient(shared_str info)
     Game().u_EventSend(packet);
 }
 
+void IsGameFreeMP() { g_pGamePersistent->GameType() == eGameIDFreemp; }
 
 // XXX nitrocaster: one can export enum like class, without defining dummy type
 template<typename T>
@@ -888,7 +889,7 @@ IC static void CLevel_Export(lua_State* luaState)
     [
         def("command_line", &command_line),
         def("IsGameTypeSingle", (bool (*)())&IsGameTypeSingle),
-        //def("IsGameTypeFreemp", (bool (*)())&IsGameTypeFreemp),
+        def("IsGameTypeFreemp", (bool (*)())&IsGameFreeMP),
       
 
         def("IsDynamicMusic", &IsDynamicMusic), 

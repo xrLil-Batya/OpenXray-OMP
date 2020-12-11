@@ -58,8 +58,17 @@ void CUITalkWnd::InitTalkDialog()
     m_pOthersDialogManager = smart_cast<CPhraseDialogManager*>(m_pOthersInvOwner);
 
     //имена собеседников
-    UITalkDialogWnd->UICharacterInfoLeft.InitCharacter(m_pOurInvOwner->object_id());
-    UITalkDialogWnd->UICharacterInfoRight.InitCharacter(m_pOthersInvOwner->object_id());
+    if (IsGameTypeSingle())
+    {
+        UITalkDialogWnd->UICharacterInfoLeft.InitCharacter(m_pOurInvOwner->object_id());
+        UITalkDialogWnd->UICharacterInfoRight.InitCharacter(m_pOthersInvOwner->object_id());
+    }
+    else
+    {
+        //Msg("GameType(Single) == [%s]", IsGameTypeSingle() ? "true" : "false" );
+        UITalkDialogWnd->UICharacterInfoLeft.InitCharacterMP(m_pOurInvOwner);
+        UITalkDialogWnd->UICharacterInfoRight.InitCharacterMP(m_pOthersInvOwner);
+    }
 
     //.	UITalkDialogWnd->UIDialogFrame.UITitleText.SetText		(m_pOthersInvOwner->Name());
     //.	UITalkDialogWnd->UIOurPhrasesFrame.UITitleText.SetText	(m_pOurInvOwner->Name());
@@ -312,14 +321,14 @@ void CUITalkWnd::SwitchToTrade()
 {
     if (m_pOurInvOwner->IsTradeEnabled() && m_pOthersInvOwner->IsTradeEnabled())
     {
-        CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-        if (pGameSP)
+        // CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+        if (CurrentGameUI())
         {
             /*			if ( pGameSP->MainInputReceiver() )
                         {
                             pGameSP->MainInputReceiver()->HideDialog();
                         }*/
-            pGameSP->StartTrade(m_pOurInvOwner, m_pOthersInvOwner);
+            CurrentGameUI()->StartTrade(m_pOurInvOwner, m_pOthersInvOwner);
         } // pGameSP
     }
 }
@@ -328,14 +337,14 @@ void CUITalkWnd::SwitchToUpgrade()
 {
     // if ( m_pOurInvOwner->IsInvUpgradeEnabled() && m_pOthersInvOwner->IsInvUpgradeEnabled() )
     {
-        CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-        if (pGameSP)
+        // CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+        if (CurrentGameUI())
         {
             /*			if ( pGameSP->MainInputReceiver() )
                         {
                             pGameSP->MainInputReceiver()->HideDialog();
                         }*/
-            pGameSP->StartUpgrade(m_pOurInvOwner, m_pOthersInvOwner);
+            CurrentGameUI()->StartUpgrade(m_pOurInvOwner, m_pOthersInvOwner);
         }
     }
 }

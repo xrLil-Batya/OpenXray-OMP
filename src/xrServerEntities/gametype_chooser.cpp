@@ -14,6 +14,7 @@ enum ERPGameType
     rpgtGameArtefactHunt,
     rpgtGameCaptureTheArtefact,
     rpgtGameFreeMp,
+
     rpgtGameCount,
 };
 

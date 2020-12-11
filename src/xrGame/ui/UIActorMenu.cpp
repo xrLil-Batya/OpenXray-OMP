@@ -47,12 +47,36 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 {
     R_ASSERT(!IsShown());
     m_pPartnerInvOwner = io;
+
+    if (m_pPartnerInvOwner)
+    {
+        if (m_pPartnerInvOwner->use_simplified_visual())
+        {
+            m_PartnerCharacterInfo->ClearInfo();
+        }
+        else
+        {
+            if (IsGameTypeSingle())
+            {
+                m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
+            }
+            else
+            {
+                m_PartnerCharacterInfo->InitCharacterMP(m_pPartnerInvOwner);
+            }
+        }
+
+        SetInvBox(NULL);
+    }
+    else
+        m_PartnerCharacterInfo->ClearInfo();
 }
 
 void CUIActorMenu::InitActorInfo()
 {
     if (!GetModeSpecificActorInfo())
         return;
+
     if (IsGameTypeSingle())
     {
         if (m_pActorInvOwner)

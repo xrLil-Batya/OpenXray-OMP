@@ -121,7 +121,7 @@ bool CInventoryOwner::net_Spawn(CSE_Abstract* DC)
         return FALSE;
     CSE_Abstract* E = (CSE_Abstract*)(DC);
 
-    if (IsGameTypeSingle() || !smart_cast<CSE_ActorMP*>(E))
+      if (/*IsGameTypeSingle() ||*/ !smart_cast<CSE_ActorMP*>(E))
     {
         CSE_ALifeTraderAbstract* pTrader = NULL;
         if (E)
@@ -153,9 +153,9 @@ bool CInventoryOwner::net_Spawn(CSE_Abstract* DC)
     {
         CharacterInfo().m_SpecificCharacter.Load("mp_actor");
         CharacterInfo().InitSpecificCharacter("mp_actor");
-        CharacterInfo().m_SpecificCharacter.data()->m_sGameName =
-            (E->name_replace()[0]) ? E->name_replace() : *pThis->cName();
+        CharacterInfo().m_SpecificCharacter.data()->m_sGameName = (E->name_replace()[0]) ? E->name_replace() : *pThis->cName();
         m_game_name = (E->name_replace()[0]) ? E->name_replace() : *pThis->cName();
+
     }
 
     if (!pThis->Local())
@@ -278,9 +278,9 @@ void CInventoryOwner::StopTalk()
     m_pTalkPartner = NULL;
     m_bTalking = false;
 
-    CUIGameSP* ui_sp = smart_cast<CUIGameSP*>(CurrentGameUI());
-    if (ui_sp && ui_sp->TalkMenu->IsShown())
-        ui_sp->TalkMenu->Stop();
+    //CUIGameSP* ui_sp = smart_cast<CUIGameSP*>();
+    if (CurrentGameUI() && CurrentGameUI()->TalkMenu->IsShown())
+        CurrentGameUI()->TalkMenu->Stop();
 }
 
 bool CInventoryOwner::IsTalking() { return m_bTalking; }
@@ -289,10 +289,10 @@ void CInventoryOwner::StopTrading()
 {
     m_bTrading = false;
 
-    CUIGameSP* ui_sp = smart_cast<CUIGameSP*>(CurrentGameUI());
-    if (ui_sp)
+    //CUIGameSP* ui_sp = smart_cast<CUIGameSP*>(CurrentGameUI());
+    if (CurrentGameUI())
     {
-        ui_sp->HideActorMenu();
+        CurrentGameUI()->HideActorMenu();
     }
 }
 
