@@ -3,6 +3,7 @@
 #include "game_base.h"
 #include "xrCore/client_id.h"
 #include "WeaponAmmo.h"
+#include "inventory_upgrade_manager.h"
 
 class NET_Packet;
 class CGameObject;
@@ -126,4 +127,14 @@ public:
 
     virtual bool IsPlayerInTeam(game_PlayerState* ps, ETeam team) { return ps->team == team; };
     virtual void OnConnected();
+
+
+    inventory::upgrade::Manager* m_upgrade_manager;
+
+    inline inventory::upgrade::Manager& inventory_upgrade_manager() const
+    {
+        VERIFY(initialized());
+        VERIFY(m_upgrade_manager);
+        return *m_upgrade_manager;
+    }
 };

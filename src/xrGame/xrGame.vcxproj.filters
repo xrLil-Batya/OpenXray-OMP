@@ -1861,9 +1861,6 @@
     <Filter Include="Core\Server\xrGameSpyServer">
       <UniqueIdentifier>{963eebca-4495-44e2-8fb5-bee1a28330af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Server\filetransfer">
-      <UniqueIdentifier>{bf990cd5-6464-445f-88f1-c3f61d940651}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Server\ServerConnect">
       <UniqueIdentifier>{7511649f-4c16-42db-9516-70367199c4dd}</UniqueIdentifier>
     </Filter>
@@ -2262,6 +2259,9 @@
     </Filter>
     <Filter Include="UI\GameTypes\FMP">
       <UniqueIdentifier>{c7288a9f-c4bf-4c93-a341-112b436d7b6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Server\filetransfer">
+      <UniqueIdentifier>{bf990cd5-6464-445f-88f1-c3f61d940651}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

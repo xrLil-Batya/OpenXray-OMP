@@ -19,6 +19,7 @@
 #include "inventory_upgrade.h"
 #include "Level.h"
 #include "WeaponMagazinedWGrenade.h"
+ 
 
 bool CInventoryItem::has_upgrade_group(const shared_str& upgrade_group_id)
 {
@@ -27,7 +28,8 @@ bool CInventoryItem::has_upgrade_group(const shared_str& upgrade_group_id)
 
     for (; it != it_e; ++it)
     {
-        inventory::upgrade::Upgrade* upgrade = ai().alife().inventory_upgrade_manager().get_upgrade(*it);
+       
+        inventory::upgrade::Upgrade* upgrade = Game().inventory_upgrade_manager().get_upgrade(*it);
         if (upgrade->parent_group_id() == upgrade_group_id)
             return true;
     }
@@ -68,7 +70,8 @@ bool CInventoryItem::get_upgrades_str(string2048& res) const
     inventory::upgrade::Upgrade* upgr;
     for (; ib != ie; ++ib)
     {
-        upgr = ai().alife().inventory_upgrade_manager().get_upgrade(*ib);
+         
+        upgr = Game().inventory_upgrade_manager().get_upgrade(*ib);
         if (!upgr)
         {
             continue;
@@ -142,14 +145,14 @@ void CInventoryItem::net_Spawn_install_upgrades(Upgrades_type saved_upgrades) //
     {
         return;
     }
-
-    ai().alife().inventory_upgrade_manager().init_install(*this); // from pSettings
+     
+    Game().inventory_upgrade_manager().init_install(*this); // from pSettings
 
     auto ib = saved_upgrades.begin();
     auto ie = saved_upgrades.end();
     for (; ib != ie; ++ib)
     {
-        ai().alife().inventory_upgrade_manager().upgrade_install(*this, (*ib), true);
+        Game().inventory_upgrade_manager().upgrade_install(*this, (*ib), true);
     }
 }
 

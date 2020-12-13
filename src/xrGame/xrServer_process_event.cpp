@@ -351,7 +351,21 @@ void xrServer::Process_event(NET_Packet& P, ClientID sender)
     {
         CSE_Abstract* e_dest = receiver;
         CSE_ALifeTraderAbstract* pTa = smart_cast<CSE_ALifeTraderAbstract*>(e_dest);
-        pTa->m_dwMoney = P.r_u32();
+        CSE_ALifeCreatureAbstract* Actor = smart_cast<CSE_ALifeCreatureAbstract*>(e_dest);
+
+        if (Actor)
+        {
+            game_sv_freemp* freegame = smart_cast<game_sv_freemp*>(game);
+
+            freegame->OnTradeWindowActivate(sender, P.r_u32());
+
+            Log("EventToServerRecived = ", pTa->object_id());
+        }
+        else
+        {
+            pTa->m_dwMoney = P.r_u32();
+            Log("EventToServerRecived(NotActor) = ", pTa->object_id());
+        }
     }
     break;
     case GE_FREEZE_OBJECT: break;

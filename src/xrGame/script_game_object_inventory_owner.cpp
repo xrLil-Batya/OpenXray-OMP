@@ -1784,6 +1784,7 @@ void CScriptGameObject::Weapon_AddonDetach(pcstr item_section)
     if (weapon->CanDetach(item_section))
         weapon->Detach(item_section, true);
 }
+ 
 
 bool CScriptGameObject::InstallUpgrade(pcstr upgrade)
 {
@@ -1796,8 +1797,7 @@ bool CScriptGameObject::InstallUpgrade(pcstr upgrade)
 
     if (!pSettings->section_exist(upgrade))
         return false;
-
-    return ai().alife().inventory_upgrade_manager().upgrade_install(*item, upgrade, false);
+    return Game().inventory_upgrade_manager().upgrade_install(*item, upgrade, false);
 }
 
 bool CScriptGameObject::HasUpgrade(pcstr upgrade) const

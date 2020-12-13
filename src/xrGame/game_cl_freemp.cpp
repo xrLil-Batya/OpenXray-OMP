@@ -5,16 +5,18 @@
 #include "UIGameFMP.h"
 #include "actor_mp_client.h"
 
+
+
 game_cl_freemp::game_cl_freemp() { 
     
     m_game_ui = NULL;
-
+    //m_upgrade_manager = 0;
+    m_upgrade_manager = xr_new<inventory::upgrade::Manager>();
 }
 
 game_cl_freemp::~game_cl_freemp()
 {
-
-
+    xr_delete(m_upgrade_manager);
 }
 
 CUIGameCustom* game_cl_freemp::createGameUI()

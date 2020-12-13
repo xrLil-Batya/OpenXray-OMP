@@ -288,6 +288,7 @@ void CUIActorMenu::Update()
         m_ItemInfo->Update();
     if (m_hint_wnd)
         m_hint_wnd->Update();
+    UpdateActorMP();
 }
 
 bool CUIActorMenu::StopAnyMove() // true = актёр не идёт при открытом меню

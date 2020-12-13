@@ -1,6 +1,7 @@
 #pragma once
 #include "game_cl_mp.h"
 
+
 class CUIGameFMP;
 
 class game_cl_freemp : public game_cl_mp
@@ -31,4 +32,8 @@ public:
     virtual void OnConnected();
 
     virtual void ImportUpdates();
+
+   
+    // inventory::upgrade::Manager& inventory_upgrade_manager() const;
+
 };
