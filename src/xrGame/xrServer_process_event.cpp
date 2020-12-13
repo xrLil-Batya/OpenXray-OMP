@@ -272,6 +272,13 @@ void xrServer::Process_event(NET_Packet& P, ClientID sender)
             break;
         }
         iitem->add_upgrade(upgrade_id);
+
+        NET_Packet packet;
+        packet.w_begin(M_SCRIPT);
+        packet.w_u32(MP_Install_Upgrade);
+        packet.w_u16(destination);
+        packet.w_stringZ(upgrade_id);
+        SendBroadcast(sender, packet, net_flags(TRUE, TRUE));
     }
     break;
     case GE_INV_BOX_STATUS:
