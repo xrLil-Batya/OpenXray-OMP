@@ -275,7 +275,7 @@ void CUIActorMenu::InitializeUpgradeMode(CUIXml& /*uiXml*/)
         m_pUpgradeWnd->SetAutoDelete(true);
     }
 
-    if (ai().get_alife())
+    //if (ai().get_alife())
     {
         m_upgrade_info = xr_new<UIInvUpgradeInfo>();
         m_upgrade_info->SetAutoDelete(true);
