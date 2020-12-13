@@ -478,10 +478,9 @@ void CSoundMemoryManager::load(IReader& packet)
 
         m_delayed_objects.push_back(delayed_object);
 
-        const CClientSpawnManager::CSpawnCallback* spawn_callback =
-            Level().client_spawn_manager().callback(delayed_object.m_object_id, m_object->ID());
+        const CClientSpawnManager::CSpawnCallback* spawn_callback = Level().client_spawn_manager().callback(delayed_object.m_object_id, m_object->ID());
         if (!spawn_callback || !spawn_callback->m_object_callback)
-            if (!GEnv.isDedicatedServer)
+           // if (!GEnv.isDedicatedServer)
                 Level().client_spawn_manager().add(delayed_object.m_object_id, m_object->ID(), callback);
 #ifdef DEBUG
             else

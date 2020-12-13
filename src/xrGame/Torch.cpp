@@ -167,6 +167,7 @@ void CTorch::Switch()
 {
     if (OnClient())
         return;
+
     bool bActive = !m_switched_on;
     Switch(bActive);
 }
@@ -424,6 +425,7 @@ void CTorch::UpdateCL()
 void CTorch::create_physic_shell() { CPhysicsShellHolder::create_physic_shell(); }
 void CTorch::activate_physic_shell() { CPhysicsShellHolder::activate_physic_shell(); }
 void CTorch::setup_physic_shell() { CPhysicsShellHolder::setup_physic_shell(); }
+
 void CTorch::net_Export(NET_Packet& P)
 {
     inherited::net_Export(P);
@@ -452,6 +454,7 @@ void CTorch::net_Import(NET_Packet& P)
 
     if (new_m_switched_on != m_switched_on)
         Switch(new_m_switched_on);
+
     if (new_m_bNightVisionOn != m_bNightVisionOn)
     {
         //		Msg("CTorch::net_Import - NV[%d]", new_m_bNightVisionOn);

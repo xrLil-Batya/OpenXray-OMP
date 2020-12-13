@@ -160,6 +160,7 @@ void CScriptBinder::shedule_Update(u32 time_delta)
         }
         catch (...)
         {
+            Msg("ScriptBinder[Shedule_update] [crashed] [%s] ", m_object->m_object->Name());
             clear();
         }
     }

@@ -422,8 +422,9 @@ void CObjectFactory::register_classes()
     // because we do not have scripts
     // and script functionality is not
     // needed here
-    if (!GEnv.isDedicatedServer)
-        return;
+    
+    //if (!GEnv.isDedicatedServer)
+    //    return;
 
     ADD(CElectricBall, CSE_ALifeItemArtefact, TEXT2CLSID("SCRPTART"), "artefact_s");
     //	ADD(CtaGameArtefact			,CSE_ALifeItemArtefact			,TEXT2CLSID("AF_CTA")			,"ctaartefact_s");

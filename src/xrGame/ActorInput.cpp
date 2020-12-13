@@ -57,9 +57,9 @@ void CActor::IR_OnKeyboardPress(int cmd)
     {
     case kWPN_FIRE:
     {
-        if ((mstate_wishful & mcLookout) && !IsGameTypeSingle())
+        if ( (mstate_wishful & mcLookout) && false )
             return;
-
+            
         u16 slot = inventory().GetActiveSlot();
         if (inventory().ActiveItem() && (slot == INV_SLOT_3 || slot == INV_SLOT_2))
             mstate_wishful &= ~mcSprint;
@@ -440,6 +440,22 @@ void CActor::ActorUse()
     if (m_pUsableObject && NULL == m_pObjectWeLookingAt->cast_inventory_item())
     {
         m_pUsableObject->use(this);
+
+        IGameObject* game = smart_cast<IGameObject*>(m_pUsableObject);
+
+        if (OnClient())
+        {
+            NET_Packet packet;
+
+            Level().game->u_EventGen(packet, M_SCRIPT, this->ID());
+            packet.w_u32(MP_USE);
+            packet.w_u16(game->ID());
+            // packet.w_u16(who_use->ID());
+
+            Level().game->u_EventSend(packet);
+            Log("PacketSendToServer[MP_USE] == ", this->ID());
+        }
+
     }
 
     if (m_pInvBoxWeLookingAt && m_pInvBoxWeLookingAt->nonscript_usable())

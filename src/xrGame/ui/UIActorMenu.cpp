@@ -97,7 +97,14 @@ void CUIActorMenu::InitPartnerInfo()
         if (m_pPartnerInvOwner->use_simplified_visual())
             GetModeSpecificPartnerInfo(m_currMenuMode)->ClearInfo();
         else
-            GetModeSpecificPartnerInfo(m_currMenuMode)->InitCharacter(m_pPartnerInvOwner->object_id());
+        {
+            if (IsGameTypeSingle())
+                 GetModeSpecificPartnerInfo(m_currMenuMode)->InitCharacter(m_pPartnerInvOwner->object_id());
+            else  
+                GetModeSpecificPartnerInfo(m_currMenuMode)->InitCharacterMP(m_pPartnerInvOwner); 
+             
+        }
+            
 
         SetInvBox(nullptr);
     }
@@ -169,8 +176,10 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
         default: R_ASSERT(0); break;
         }
         InitActorInfo();
+
         if (m_currMenuMode != mmUndefined && m_currMenuMode != mmInventory)
             InitPartnerInfo();
+
         CurModeToScript();
     } // if
 

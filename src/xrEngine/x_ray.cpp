@@ -29,7 +29,7 @@ extern CRenderDevice Device;
 ENGINE_API int ps_rs_loading_stages = 0;
 
 #ifdef MASTER_GOLD
-#define NO_MULTI_INSTANCES
+//#define NO_MULTI_INSTANCES
 #endif // #ifdef MASTER_GOLD
 
 //////////////////////////////////////////////////////////////////////////

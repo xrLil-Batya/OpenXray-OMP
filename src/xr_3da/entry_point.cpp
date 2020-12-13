@@ -25,7 +25,8 @@ XR_EXPORT u32 AmdPowerXpressRequestHighPerformance = 0x00000001; // PowerXpress 
 int entry_point(pcstr commandLine)
 {
     xrDebug::Initialize(commandLine);
-    R_ASSERT3(SDL_Init(SDL_INIT_VIDEO) == 0, "Unable to initialize SDL", SDL_GetError());
+    //R_ASSERT3(SDL_Init(SDL_INIT_VIDEO) == 0, "Unable to initialize SDL", SDL_GetError());
+   
     SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "0");
 
     if (!strstr(commandLine, "-nosplash"))
@@ -50,6 +51,7 @@ int entry_point(pcstr commandLine)
         const size_t sz = xr_strlen(fsltx);
         sscanf(strstr(commandLine, fsltx) + sz, "%[^ ] ", fsgame);
     }
+   
     Core.Initialize("OpenXRay", commandLine, nullptr, true, *fsgame ? fsgame : nullptr);
 
     const auto result = RunApplication();

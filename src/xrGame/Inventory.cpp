@@ -32,8 +32,7 @@ u16 INV_STATE_INV_WND = INV_STATE_BLOCK_ALL;
 u16 INV_STATE_BUY_MENU = INV_STATE_BLOCK_ALL;
 int g_auto_ammo_unload = 0;
 
-bool defaultSlotActiveness[] =
-{
+bool defaultSlotActiveness[] = {
     true, // knife
     true, // pistol
     true, // automatic
@@ -85,7 +84,8 @@ CInventory::CInventory()
         m_slots[i].m_bPersistent = !!READ_IF_EXISTS(pSettings, r_bool, "inventory", temp, false);
 
         xr_sprintf(temp, "slot_active_%d", i);
-        m_slots[i].m_bAct = !!READ_IF_EXISTS(pSettings, r_bool, "inventory", temp, ShadowOfChernobylMode ? defaultSlotActiveness[i] : false);
+        m_slots[i].m_bAct = !!READ_IF_EXISTS(
+            pSettings, r_bool, "inventory", temp, ShadowOfChernobylMode ? defaultSlotActiveness[i] : false);
     };
 
     m_bSlotsUseful = true;
@@ -349,11 +349,11 @@ bool CInventory::Slot(u16 slot_id, PIItem pIItem, bool bNotActivate, bool strict
 
     if (!strict_placement && !CanPutInSlot(pIItem, slot_id))
     {
-//#ifdef _DEBUG
-        //Msg("there is item %s[%d,%x] in slot %d[%d,%x]", ItemFromSlot(pIItem->GetSlot())->object().cName().c_str(),
+        //#ifdef _DEBUG
+        // Msg("there is item %s[%d,%x] in slot %d[%d,%x]", ItemFromSlot(pIItem->GetSlot())->object().cName().c_str(),
         //    ItemFromSlot(pIItem->GetSlot())->object().ID(), ItemFromSlot(pIItem->GetSlot()), pIItem->GetSlot(),
         //    pIItem->object().ID(), pIItem);
-//#endif
+        //#endif
         //.		if(m_slots[pIItem->GetSlot()].m_pIItem == pIItem && !bNotActivate )
         //.			Activate(pIItem->GetSlot());
 
@@ -406,7 +406,8 @@ bool CInventory::Slot(u16 slot_id, PIItem pIItem, bool bNotActivate, bool strict
         m_slots[pIItem->CurrSlot()].m_pIItem = NULL;
     }
 
-    if ((m_iActiveSlot == slot_id) || ((m_iActiveSlot == NO_ACTIVE_SLOT) && (m_iNextActiveSlot == NO_ACTIVE_SLOT) && (!bNotActivate)))
+    if ((m_iActiveSlot == slot_id) ||
+        ((m_iActiveSlot == NO_ACTIVE_SLOT) && (m_iNextActiveSlot == NO_ACTIVE_SLOT) && (!bNotActivate)))
     {
 #ifdef DEBUG
         Msg("---To Slot: activating slot [%d], Frame[%d]", slot_id, Device.dwFrame);
@@ -641,10 +642,14 @@ bool CInventory::Action(u16 cmd, u32 flags)
     {
         switch (cmd)
         {
-        case kWPN_FIRE: { pActor->SetShotRndSeed();
+        case kWPN_FIRE:
+        {
+            pActor->SetShotRndSeed();
         }
         break;
-        case kWPN_ZOOM: { pActor->SetZoomRndSeed();
+        case kWPN_ZOOM:
+        {
+            pActor->SetZoomRndSeed();
         }
         break;
         };
@@ -679,7 +684,9 @@ bool CInventory::Action(u16 cmd, u32 flags)
         case kWPN_FIREMODE_PREV:
         case kWPN_ZOOM:
         case kTORCH:
-        case kNIGHT_VISION: { SendActionEvent(cmd, flags);
+        case kNIGHT_VISION:
+        {
+            SendActionEvent(cmd, flags);
         }
         break;
         }
@@ -737,35 +744,34 @@ void CInventory::ActiveWeapon(u16 slot)
     // weapon is in active slot
     if (GetActiveSlot() == slot && ActiveItem())
     {
-        if (IsGameTypeSingle())
+        if (IsGameTypeSingle() || Game().Type() == eGameIDFreemp)
             Activate(NO_ACTIVE_SLOT);
-        else
-            ActivateNextItemInActiveSlot();
+        else ActivateNextItemInActiveSlot();
 
         return;
     }
     Activate(slot);
-    /*
-        if ( IsGameTypeSingle() )
-        {
-            Activate(slot);
-            return;
-        }
-        if ( GetActiveSlot() == slot )
-        {
-            return;
-        }
-
+/*
+    if ( IsGameTypeSingle() )
+    {
         Activate(slot);
-        if ( slot != NO_ACTIVE_SLOT && ItemFromSlot(slot) == NULL )
+        return;
+    }
+    if ( GetActiveSlot() == slot )
+    {
+        return;
+    }
+
+    Activate(slot);
+    if ( slot != NO_ACTIVE_SLOT && ItemFromSlot(slot) == NULL )
+    {
+        u16 prev_activ = GetActiveSlot();
+        m_iActiveSlot  = slot;
+        if ( !ActivateNextItemInActiveSlot() )
         {
-            u16 prev_activ = GetActiveSlot();
-            m_iActiveSlot  = slot;
-            if ( !ActivateNextItemInActiveSlot() )
-            {
-                m_iActiveSlot = prev_activ;
-            }
-        }*/
+            m_iActiveSlot = prev_activ;
+        }
+    }*/
 }
 
 void CInventory::Update()
@@ -1075,7 +1081,6 @@ bool CInventory::Eat(PIItem pIItem)
         CurrentGameUI()->GetActorMenu().SetCurrentItem(nullptr);
     }
 
-
     if (pItemToEat->Empty())
     {
         if (!pItemToEat->CanDelete())
@@ -1257,10 +1262,7 @@ u32 CInventory::BeltWidth() const
     return 0; // m_iMaxBelt;
 }
 
-u32 CInventory::BeltMaxWidth() const
-{
-    return m_iMaxBelt;
-}
+u32 CInventory::BeltMaxWidth() const { return m_iMaxBelt; }
 
 void CInventory::AddAvailableItems(TIItemContainer& items_container, bool for_trade) const
 {
@@ -1313,10 +1315,7 @@ bool CInventory::isBeautifulForActiveSlot(CInventoryItem* pIItem)
     return (false);
 }
 
-void CInventory::InvalidateState() throw()
-{
-    m_dwModifyFrame = Device.dwFrame;
-}
+void CInventory::InvalidateState() throw() { m_dwModifyFrame = Device.dwFrame; }
 
 //.#include "WeaponHUD.h"
 void CInventory::Items_SetCurrentEntityHud(bool current_entity)

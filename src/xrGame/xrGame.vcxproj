@@ -2117,6 +2117,7 @@
     <ClCompile Include="ai_sounds.cpp" />
     <ClCompile Include="ai_space.cpp" />
     <ClCompile Include="ai_stalker_alife.cpp" />
+    <ClCompile Include="ai_stalker_net.cpp" />
     <ClCompile Include="alife_anomalous_zone.cpp" />
     <ClCompile Include="alife_combat_manager.cpp" />
     <ClCompile Include="alife_communication_manager.cpp" />

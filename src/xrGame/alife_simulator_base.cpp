@@ -294,12 +294,14 @@ void CALifeSimulatorBase::release(CSE_Abstract* abstract, bool alife_query)
             release(child, alife_query);
         }
     }
-
+    
+    if (object)
     unregister_object(object, alife_query);
 
     object->m_bALifeControl = false;
 
     if (alife_query)
+        if (abstract)
         server().entity_Destroy(abstract);
 }
 

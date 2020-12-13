@@ -393,6 +393,8 @@ int __cdecl callback_count(qr2_key_type keytype, void* userdata)
         case eGameIDArtefactHunt:
         case eGameIDCaptureTheArtefact:
         case eGameIDTeamDominationZone: return 2;
+        case eGameIDFreemp: return 0;
+
         default: R_ASSERT(0); return 0;
         }
     }

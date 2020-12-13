@@ -351,6 +351,20 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
         */
     }
     break;
+    case GEG_PLAYER_USE_OBJECT:
+    {
+        Msg("ReciveClient GEG_PLAYER_USE_OBJECT");
+
+        u16 id = P.r_u16();
+        IGameObject* object = Level().Objects.net_Find(id);
+
+        IGameObject* pObject = smart_cast<IGameObject*>(object);
+
+        VERIFY(pObject);
+
+        pObject->use(this);
+    }
+    break;
     }
 }
 

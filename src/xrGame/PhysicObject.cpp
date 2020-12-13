@@ -806,7 +806,7 @@ void CPhysicObject::Interpolate()
                 p->NET_IItem.pop_front();
                 if (m_activated)
                 {
-                    Msg("Deactivating object [%d] after interpolation finish", ID());
+                    //Msg("Deactivating object [%d] after interpolation finish", ID());
                     processing_deactivate();
                     m_activated = false;
                 }

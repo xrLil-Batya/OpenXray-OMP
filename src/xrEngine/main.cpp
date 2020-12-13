@@ -32,7 +32,7 @@
 #include "TaskScheduler.hpp"
 
 #ifdef MASTER_GOLD
-#define NO_MULTI_INSTANCES
+//#define NO_MULTI_INSTANCES
 #endif
 
 // global variables

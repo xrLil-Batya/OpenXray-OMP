@@ -701,8 +701,10 @@ u16 get_nearest_actor(Fvector vec)
         CActorMP* actor = smart_cast<CActorMP*>(_O);
 
         if (actor)
+        if (actor->ID() != 0)
         {
             float distance = vec.distance_to_xz(actor->Position());
+            
             if (distance < 100.0f)
             {
                  id = actor->ID();
@@ -712,16 +714,14 @@ u16 get_nearest_actor(Fvector vec)
 
     if (id > 0)
         return id;
-    else
-    {
-        return 0;
-    }
+
+   
 }
 
 void GiveInfoToClient(shared_str info)
 {
     NET_Packet packet;
-
+    Msg("GiveInfoToClient = Transport TO Server");
     Game().u_EventGen(packet, M_SCRIPT, NULL);
     packet.w_u32(MP_GIVEINFO);
     packet.w_stringZ(info);

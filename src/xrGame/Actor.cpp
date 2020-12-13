@@ -255,7 +255,7 @@ void CActor::reinit()
     material().reinit();
 
     m_pUsableObject = NULL;
-    if (!GEnv.isDedicatedServer)
+    //if (!GEnv.isDedicatedServer)
         memory().reinit();
 
     set_input_external_handler(0);
@@ -1044,7 +1044,7 @@ void CActor::UpdateCL()
             HUD().SetFirstBulletCrosshairDisp(pWeapon->GetFirstBulletDisp());
 #endif
 
-            BOOL B = !((mstate_real & mcLookout) && !IsGameTypeSingle());
+            BOOL B = !((mstate_real & mcLookout) && false); // IsGameTypeSingle()
 
             psHUD_Flags.set(HUD_WEAPON_RT, B);
 
@@ -1456,8 +1456,8 @@ float CActor::missile_throw_force() { return 0.f; }
 void CActor::OnHUDDraw(CCustomHUD* hud, IRenderable* root)
 {
     R_ASSERT(IsFocused());
-    if (!((mstate_real & mcLookout) && !IsGameTypeSingle()))
-        g_player_hud->render_hud(root);
+    if (!((mstate_real & mcLookout) && false))
+     g_player_hud->render_hud(root);
 }
 
 void CActor::RenderIndicator(Fvector dpos, float r1, float r2, const ui_shader& IndShader)

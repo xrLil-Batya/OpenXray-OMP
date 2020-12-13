@@ -41,6 +41,7 @@ enum
 
     rsShowFPS = (1ul << 19ul),
     rsDrawParticles = (1ul << 20ul),
+    rsShowNetworkStatics = (1ul << 21ul)
     // 22-32 bit - reserved to Editor
 };
 

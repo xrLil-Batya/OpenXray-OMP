@@ -108,13 +108,14 @@ void CCustomDetector::ToggleDetector(bool bFastMode)
             }
             else
             {
-                SwitchState(eShowing);
+                OnStateSwitch(eShowing, eHiding);
                 TurnDetectorInternal(true);
             }
         }
     }
-    else if (GetState() == eIdle)
-        SwitchState(eHiding);
+    else 
+        if (GetState() == eIdle)
+        OnStateSwitch(eHiding, eIdle);
 }
 
 void CCustomDetector::OnStateSwitch(u32 S, u32 oldState)

@@ -844,7 +844,7 @@ void CWeapon::UpdateCL()
     if (!IsGameTypeSingle())
         make_Interpolation();
 
-    if ((GetNextState() == GetState()) && IsGameTypeSingle() && H_Parent() == Level().CurrentEntity())
+    if ((GetNextState() == GetState()) && H_Parent() == Level().CurrentEntity())
     {
         CActor* pActor = smart_cast<CActor*>(H_Parent());
         if (pActor && !pActor->AnyMove() && this == pActor->inventory().ActiveItem())

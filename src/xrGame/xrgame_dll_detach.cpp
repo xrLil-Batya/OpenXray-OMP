@@ -38,7 +38,7 @@ extern void InitHudSoundSettings();
 void init_game_globals()
 {
     InitHudSoundSettings();
-    if (!GEnv.isDedicatedServer)
+    //if (!GEnv.isDedicatedServer)
     {
         CInfoPortion::InitInternal(ShadowOfChernobylMode || ClearSkyMode, true);
         CEncyclopediaArticle::InitInternal(ShadowOfChernobylMode, true);

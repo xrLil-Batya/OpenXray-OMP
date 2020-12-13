@@ -751,9 +751,10 @@ void CSE_ALifeAnomalousZone::FillProps(LPCSTR pref, PropItemVec& items)
     inherited::FillProps(pref, items);
     PHelper().CreateFloat(
         items, PrepareKey(pref, *s_name, "offline interactive radius"), &m_offline_interactive_radius, 0.f, 100.f);
-    PHelper().CreateU16(
-        items, PrepareKey(pref, *s_name, "ALife" DELIMITER "Artefact spawn places count"), &m_artefact_spawn_count, 32, 256);
-    PHelper().CreateFlag32(items, PrepareKey(pref, *s_name, "ALife" DELIMITER "Visible for AI"), &m_flags, flVisibleForAI);
+    PHelper().CreateU16(items, PrepareKey(pref, *s_name, "ALife" DELIMITER "Artefact spawn places count"),
+        &m_artefact_spawn_count, 32, 256);
+    PHelper().CreateFlag32(
+        items, PrepareKey(pref, *s_name, "ALife" DELIMITER "Visible for AI"), &m_flags, flVisibleForAI);
 }
 #endif // #ifndef XRGAME_EXPORTS
 
@@ -893,7 +894,7 @@ void CSE_ALifeCreatureAbstract::STATE_Write(NET_Packet& tNetPacket)
     save_data(m_dynamic_out_restrictions, tNetPacket);
     save_data(m_dynamic_in_restrictions, tNetPacket);
     tNetPacket.w_u16(get_killer_id());
-    //R_ASSERT(!(get_health() > 0.0f && get_killer_id() != u16(-1)));
+    // R_ASSERT(!(get_health() > 0.0f && get_killer_id() != u16(-1)));
     tNetPacket.w_u64(m_game_death_time);
 }
 
@@ -1146,7 +1147,8 @@ void CSE_ALifeMonsterAbstract::FillProps(LPCSTR pref, PropItemVec& items)
 {
     inherited1::FillProps(pref, items);
 
-    PHelper().CreateFlag32(items, PrepareKey(pref, *s_name, "ALife" DELIMITER "No move in offline"), &m_flags, flOfflineNoMove);
+    PHelper().CreateFlag32(
+        items, PrepareKey(pref, *s_name, "ALife" DELIMITER "No move in offline"), &m_flags, flOfflineNoMove);
     PHelper().CreateFlag32(items, PrepareKey(pref, *s_name, "Use smart terrain tasks"), &m_flags, flUseSmartTerrains);
 
     if (pSettings->line_exist(s_name, "SpaceRestrictionSection"))
@@ -1688,16 +1690,58 @@ void CSE_ALifeMonsterBase::STATE_Write(NET_Packet& tNetPacket)
     tNetPacket.w_u16(m_spec_object_id);
 }
 
+float f_health;
+u16 u_motion_idx;
+u8 u_motion_slot;
+
 void CSE_ALifeMonsterBase::UPDATE_Read(NET_Packet& tNetPacket)
 {
-    inherited1::UPDATE_Read(tNetPacket);
-    inherited2::UPDATE_Read(tNetPacket);
+    if (IsGameTypeSingle())
+    {
+        inherited1::UPDATE_Read(tNetPacket);
+        inherited2::UPDATE_Read(tNetPacket);
+    }
+    else
+    {
+        
+         
+        o_Position.set(tNetPacket.r_vec3());
+         
+
+        tNetPacket.r_float(f_health);
+
+        tNetPacket.r_angle8(o_torso.pitch);
+        // tNetPacket.r_angle8(o_torso.roll);
+        tNetPacket.r_angle8(o_torso.yaw);
+
+        tNetPacket.r_u16(u_motion_idx);
+        tNetPacket.r_u8(u_motion_slot);
+        set_health(f_health); 
+    
+    }
 }
 
 void CSE_ALifeMonsterBase::UPDATE_Write(NET_Packet& tNetPacket)
 {
-    inherited1::UPDATE_Write(tNetPacket);
-    inherited2::UPDATE_Write(tNetPacket);
+    if (IsGameTypeSingle())
+    {
+        inherited1::UPDATE_Write(tNetPacket);
+        inherited2::UPDATE_Write(tNetPacket);
+    }
+    else
+    {      
+        tNetPacket.w_vec3(o_Position);
+        
+
+        tNetPacket.w_float(get_health());
+
+        tNetPacket.w_angle8(o_torso.pitch);
+        // tNetPacket.w_angle8(o_torso.roll);
+        tNetPacket.w_angle8(o_torso.yaw);
+
+        tNetPacket.w_u16(u_motion_idx);
+        tNetPacket.w_u8(u_motion_slot);
+    }
 }
 
 void CSE_ALifeMonsterBase::load(NET_Packet& tNetPacket)
@@ -1826,16 +1870,61 @@ void CSE_ALifeHumanStalker::STATE_Read(NET_Packet& tNetPacket, u16 size)
 
 void CSE_ALifeHumanStalker::UPDATE_Write(NET_Packet& tNetPacket)
 {
-    inherited1::UPDATE_Write(tNetPacket);
-    inherited2::UPDATE_Write(tNetPacket);
-    tNetPacket.w_stringZ(m_start_dialog);
+    tNetPacket.w_vec3(o_Position);
+
+    tNetPacket.w_float(get_health());
+
+    tNetPacket.w_angle8(o_torso.pitch);
+    // tNetPacket.w_angle8(o_torso.roll);
+    tNetPacket.w_angle8(o_torso.yaw);
+
+    tNetPacket.w_angle8(f_head_dir_pitch);
+    tNetPacket.w_angle8(f_head_dir_yaw);
+
+    tNetPacket.w_u16(u_active_slot);
+
+    tNetPacket.w_u16(u_torso_anm_idx);
+    tNetPacket.w_u8(u_torso_anm_slot);
+
+    tNetPacket.w_u16(u_legs_anm_idx);
+    tNetPacket.w_u8(u_legs_anm_slot);
+
+    tNetPacket.w_u16(u_head_anm_idx);
+    tNetPacket.w_u8(u_head_anm_slot);
+
+    tNetPacket.w_u16(u_script_anm_idx);
+    tNetPacket.w_u8(u_script_anm_slot);
 }
 
 void CSE_ALifeHumanStalker::UPDATE_Read(NET_Packet& tNetPacket)
 {
-    inherited1::UPDATE_Read(tNetPacket);
-    inherited2::UPDATE_Read(tNetPacket);
-    tNetPacket.r_stringZ(m_start_dialog);
+    o_Position.set(tNetPacket.r_vec3());
+
+    tNetPacket.r_float(f_health);
+
+    tNetPacket.r_angle8(o_torso.pitch);
+    // tNetPacket.r_angle8(o_torso.roll);
+    tNetPacket.r_angle8(o_torso.yaw);
+
+    tNetPacket.r_angle8(f_head_dir_pitch);
+    tNetPacket.r_angle8(f_head_dir_yaw);
+
+    tNetPacket.r_u16(u_active_slot);
+
+    tNetPacket.r_u16(u_torso_anm_idx);
+    tNetPacket.r_u8(u_torso_anm_slot);
+
+    tNetPacket.r_u16(u_legs_anm_idx);
+    tNetPacket.r_u8(u_legs_anm_slot);
+
+    tNetPacket.r_u16(u_head_anm_idx);
+    tNetPacket.r_u8(u_head_anm_slot);
+
+    tNetPacket.r_u16(u_script_anm_idx);
+    tNetPacket.r_u8(u_script_anm_slot);
+
+    set_health(f_health);
+    o_model = o_torso.yaw;
 }
 
 void CSE_ALifeHumanStalker::load(NET_Packet& tNetPacket)
@@ -1843,6 +1932,8 @@ void CSE_ALifeHumanStalker::load(NET_Packet& tNetPacket)
     inherited1::load(tNetPacket);
     inherited2::load(tNetPacket);
 }
+
+BOOL CSE_ALifeHumanStalker::Net_Relevant() { return g_Alive(); }
 
 #ifndef XRGAME_EXPORTS
 void CSE_ALifeHumanStalker::FillProps(LPCSTR pref, PropItemVec& values)
