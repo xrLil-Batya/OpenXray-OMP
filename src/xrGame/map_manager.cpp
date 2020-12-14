@@ -164,7 +164,7 @@ void CMapManager::RemoveMapLocationByObjectID(u16 id) // call on destroy object
     auto it = std::find_if(Locations().begin(), Locations().end(), key);
     while (it != Locations().end())
     {
-        if (IsGameTypeSingle())
+        //if (IsGameTypeSingle())
             Level().GameTaskManager().MapLocationRelcase((*it).location);
 
         Destroy((*it).location);

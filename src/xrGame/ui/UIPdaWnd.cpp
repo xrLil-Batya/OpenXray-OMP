@@ -91,7 +91,7 @@ void CUIPdaWnd::Init()
     m_btn_close = UIHelper::Create3tButton(uiXml, "close_button", this);
     m_hint_wnd = UIHelper::CreateHint(uiXml, "hint_wnd");
 
-    if (IsGameTypeSingle())
+    if (IsGameTypeSingle() || g_pGamePersistent->GameType() == eGameIDFreemp)
     {
         pUIMapWnd = xr_new<CUIMapWnd>(m_hint_wnd);
         if (!pUIMapWnd->Init("pda_map.xml", "map_wnd", false))

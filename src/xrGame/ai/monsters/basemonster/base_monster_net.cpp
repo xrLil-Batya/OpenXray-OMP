@@ -19,7 +19,6 @@ void CBaseMonster::net_Export(NET_Packet& P)
     R_ASSERT(Local());
     if (IsGameTypeSingle())
     {
-    
         // export last known packet
         R_ASSERT(!NET.empty());
         net_update& N = NET.back();
@@ -53,7 +52,6 @@ void CBaseMonster::net_Export(NET_Packet& P)
             P.w(&f1, sizeof(f1));
             P.w(&f1, sizeof(f1));
         }
-
     }
     else
     {
@@ -61,7 +59,7 @@ void CBaseMonster::net_Export(NET_Packet& P)
         P.w_float(GetfHealth());
 
         P.w_angle8(movement().m_body.current.pitch);
-        // P.w_angle8(movement().m_body.current.roll);
+        P.w_angle8(movement().m_body.current.roll);
         P.w_angle8(movement().m_body.current.yaw);
 
         IKinematicsAnimated* ik_anim_obj = smart_cast<IKinematicsAnimated*>(Visual());
@@ -135,20 +133,33 @@ void CBaseMonster::net_Import(NET_Packet& P)
         u8 u_motion_slot;
 
         P.r_vec3(fv_position);
-        
 
         P.r_float(f_health);
 
         P.r_angle8(fv_direction.pitch);
-        // P.r_angle8(fv_direction.roll);
+        P.r_angle8(fv_direction.roll);
         P.r_angle8(fv_direction.yaw);
 
         P.r_u16(u_motion_idx);
         P.r_u8(u_motion_slot);
 
         SetfHealth(f_health);
-       
-        Position().set(fv_position);
+
+        //Position().set(fv_position);
+        //XFORM().rotateY(fv_direction.yaw);
+        
+        //movement().m_body.current.pitch = fv_direction.pitch;
+        //movement().m_body.current.roll = fv_direction.roll;
+        //movement().m_body.current.yaw = fv_direction.yaw;
+        
+        Fmatrix M;
+ 
+        XFORM().mulB_43(M);
+        XFORM().rotateY(fv_direction.yaw);
+
+        XFORM().translate_over(fv_position);
+        Position().set(fv_position); // we need it?         
+
         SPHNetState State;
         State.position = fv_position;
         State.previous_position = fv_position;
@@ -161,7 +172,7 @@ void CBaseMonster::net_Import(NET_Packet& P)
         {
             pSyncObj->set_State(State);
         }
-         
+
         MotionID motion;
         IKinematicsAnimated* ik_anim_obj = smart_cast<IKinematicsAnimated*>(Visual());
         if (u_last_motion_idx != u_motion_idx || u_last_motion_slot != u_motion_slot)
@@ -181,6 +192,5 @@ void CBaseMonster::net_Import(NET_Packet& P)
 
         setVisible(TRUE);
         setEnabled(TRUE);
-
     }
 }

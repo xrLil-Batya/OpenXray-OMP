@@ -269,13 +269,12 @@ void CALifeSimulatorBase::create(CSE_ALifeObject* object)
 
 void CALifeSimulatorBase::release(CSE_Abstract* abstract, bool alife_query)
 {
-#ifdef DEBUG
-    if (psAI_Flags.test(aiALife))
+//#ifdef DEBUG
+    if (true)//psAI_Flags.test(aiALife))
     {
-        Msg("[LSS] Releasing object [%s][%s][%d][%x]", abstract->name_replace(), *abstract->s_name, abstract->ID,
-            smart_cast<void*>(abstract));
+        Msg("[LSS] Releasing object [%s][%s][%d][%x]", abstract->name_replace(), *abstract->s_name, abstract->ID, smart_cast<void*>(abstract));
     }
-#endif
+//#endif
     CSE_ALifeDynamicObject* object = objects().object(abstract->ID);
     VERIFY(object);
 
@@ -297,9 +296,10 @@ void CALifeSimulatorBase::release(CSE_Abstract* abstract, bool alife_query)
             release(child, alife_query);
         }
     }
-    
+
+
     if (object)
-    unregister_object(object, alife_query);
+       unregister_object(object, alife_query);
 
     object->m_bALifeControl = false;
 

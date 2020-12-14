@@ -561,6 +561,8 @@ public:
     virtual void UPDATE_Write(NET_Packet& P);
     virtual void STATE_Read(NET_Packet& P, u16 size);
     virtual void STATE_Write(NET_Packet& P);
+    virtual BOOL Net_Relevant();
+
     SERVER_ENTITY_EDITOR_METHODS
 };
 

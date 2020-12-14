@@ -1711,7 +1711,7 @@ void CSE_ALifeMonsterBase::UPDATE_Read(NET_Packet& tNetPacket)
         tNetPacket.r_float(f_health);
 
         tNetPacket.r_angle8(o_torso.pitch);
-        // tNetPacket.r_angle8(o_torso.roll);
+        tNetPacket.r_angle8(o_torso.roll);
         tNetPacket.r_angle8(o_torso.yaw);
 
         tNetPacket.r_u16(u_motion_idx);
@@ -1736,7 +1736,7 @@ void CSE_ALifeMonsterBase::UPDATE_Write(NET_Packet& tNetPacket)
         tNetPacket.w_float(get_health());
 
         tNetPacket.w_angle8(o_torso.pitch);
-        // tNetPacket.w_angle8(o_torso.roll);
+        tNetPacket.w_angle8(o_torso.roll);
         tNetPacket.w_angle8(o_torso.yaw);
 
         tNetPacket.w_u16(u_motion_idx);
@@ -1748,6 +1748,18 @@ void CSE_ALifeMonsterBase::load(NET_Packet& tNetPacket)
 {
     inherited1::load(tNetPacket);
     inherited2::load(tNetPacket);
+}
+
+BOOL CSE_ALifeMonsterBase::Net_Relevant()
+{
+    if (g_pGamePersistent->GameType() == eGameIDSingle)
+    {
+        inherited1::Net_Relevant();
+    }
+    else
+    {
+        return g_Alive();
+    }
 }
 
 #ifndef XRGAME_EXPORTS

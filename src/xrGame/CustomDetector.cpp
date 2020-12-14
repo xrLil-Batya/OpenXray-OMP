@@ -76,6 +76,21 @@ bool CCustomDetector::CheckCompatibility(CHudItem* itm)
     return true;
 }
 
+void CCustomDetector::SwitchState(u32 S)
+{ 
+
+  /*  if (OnClient())
+    {
+        NET_Packet packet;
+        Game().u_EventGen(packet, GE_DETECTOR_STATE_CHANGE, ID());
+        packet.w_u8(S);
+        Game().u_EventSend(packet);
+    }else */ 
+       // OnStateSwitch(S, eIdle);
+        SetState(S);
+
+}
+
 void CCustomDetector::HideDetector(bool bFastMode)
 {
     if (GetState() == eIdle)
@@ -108,14 +123,14 @@ void CCustomDetector::ToggleDetector(bool bFastMode)
             }
             else
             {
-                OnStateSwitch(eShowing, eHiding);
+                SwitchState(eShowing);
                 TurnDetectorInternal(true);
             }
         }
     }
-    else 
-        if (GetState() == eIdle)
-        OnStateSwitch(eHiding, eIdle);
+    else
+     if (GetState() == eIdle)
+        SwitchState(eHiding);
 }
 
 void CCustomDetector::OnStateSwitch(u32 S, u32 oldState)
@@ -156,20 +171,20 @@ void CCustomDetector::OnAnimationEnd(u32 state)
     inherited::OnAnimationEnd(state);
     switch (state)
     {
-    case eShowing:
-    {
-        SwitchState(eIdle);
-        if (IsUsingCondition() && m_fDecayRate > 0.f)
-            this->SetCondition(-m_fDecayRate);
-    }
-    break;
-    case eHiding:
-    {
-        SwitchState(eHidden);
-        TurnDetectorInternal(false);
-        g_player_hud->detach_item(this);
-    }
-    break;
+        case eShowing:
+        {
+            SwitchState(eIdle);
+            if (IsUsingCondition() && m_fDecayRate > 0.f)
+                this->SetCondition(-m_fDecayRate);
+        }
+        break;
+        case eHiding:
+        {
+            SwitchState(eHidden);
+            TurnDetectorInternal(false);
+            g_player_hud->detach_item(this);
+        }
+        break;
     }
 }
 
@@ -284,6 +299,7 @@ void CCustomDetector::UpdateCL()
         return;
 
     UpdateVisibility();
+
     if (!IsWorking())
         return;
     UpfateWork();

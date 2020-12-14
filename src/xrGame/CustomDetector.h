@@ -128,6 +128,8 @@ public:
     CCustomDetector();
     virtual ~CCustomDetector();
 
+
+    void SwitchState(u32 S);
     virtual bool net_Spawn(CSE_Abstract* DC);
     virtual void Load(LPCSTR section);
 
