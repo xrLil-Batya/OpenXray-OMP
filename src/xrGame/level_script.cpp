@@ -706,11 +706,7 @@ u16 get_nearest_actor(Fvector vec)
             }
         }
     }
-
-    if (id > 0)
-        return id;
-
-   
+    return id;
 }
 
 void GiveInfoToClient(shared_str info)
@@ -723,7 +719,7 @@ void GiveInfoToClient(shared_str info)
     Game().u_EventSend(packet);
 }
 
-void IsGameFreeMP() { g_pGamePersistent->GameType() == eGameIDFreemp; }
+bool IsGameFreeMP() { return g_pGamePersistent->GameType() == eGameIDFreemp; }
 
 // XXX nitrocaster: one can export enum like class, without defining dummy type
 template<typename T>

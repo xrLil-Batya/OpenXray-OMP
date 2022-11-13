@@ -223,23 +223,23 @@ void CGamePersistent::OnAppStart()
 #ifndef XR_PLATFORM_WINDOWS
     init_game_globals();
 #else
-    TaskScheduler->AddTask("init_game_globals()", init_game_globals, nullptr, nullptr, &globalsInitialized);
+    const auto& initializeGlobals =
+        TaskScheduler->AddTask("init_game_globals()", [](Task&, void*) { init_game_globals(); });
 #endif
     // load game materials
     TaskScheduler->AddTask(
-        "GMLib.Load()",
-        [&]() {
+        "GMLib.Load()", [](Task&, void*) {
             GEnv.Render->MakeContextCurrent(IRender::HelperContext); // free to use, so let's use it
             GMLib.Load();
             GEnv.Render->MakeContextCurrent(IRender::NoContext); // release it for other users
-        },
-        nullptr, nullptr, &materialsLoaded);
+        });
 
     SetupUIStyle();
     GEnv.UI = xr_new<UICore>();
 
+    m_pMainMenu = xr_new<CMainMenu>();
     TaskScheduler->AddTask(
-        "CMainMenu::CMainMenu()", [&]() { m_pMainMenu = xr_new<CMainMenu>(); }, nullptr, nullptr, &menuCreated);
+        "CMainMenu::CMainMenu()", [](Task&, void*) {  });
 
     inherited::OnAppStart();
 

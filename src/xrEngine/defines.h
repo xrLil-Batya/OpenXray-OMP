@@ -40,9 +40,7 @@ enum
     mtNetwork               = (1ul << 17ul),
     mtParticles             = (1ul << 18ul),
 
-    rsShowFPS = (1ul << 19ul),
-    rsDrawParticles = (1ul << 20ul),
-    rsShowNetworkStatics = (1ul << 21ul)
+    rsShowNetworkStatics = (1ul << 19ul),
     // 22-32 bit - reserved to Editor
 };
 

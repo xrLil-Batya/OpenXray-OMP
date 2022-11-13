@@ -1229,8 +1229,8 @@ bool CAI_Stalker::can_fire_right_now()
         return (false);
 
     VERIFY(best_weapon());
-    CWeapon& best_weapon = smart_cast<CWeapon&>(*this->best_weapon());
-    return best_weapon.GetAmmoElapsed() > 0;
+    CWeapon* best_weapon = smart_cast<CWeapon*>(this->best_weapon());
+    return best_weapon->GetAmmoElapsed() > 0;
 }
 
 bool CAI_Stalker::unlimited_ammo() { return infinite_ammo() && CObjectHandler::planner().object().g_Alive(); }

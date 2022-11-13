@@ -32,7 +32,7 @@ class CUITradeWnd;
 class CUITalkWnd;
 
 
-struct StaticDrawableWrapper : public IPureDestroyableObject
+class StaticDrawableWrapper : public IPureDestroyableObject
 {
 public:
     CUIStatic* m_static;

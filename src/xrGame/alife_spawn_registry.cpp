@@ -68,12 +68,12 @@ void CALifeSpawnRegistry::load(IReader& file_stream, LPCSTR game_name)
  
     if (g_pGamePersistent->GameType() == eGameIDSingle)
     {
-        bool file_exists = !!FS.exist(file_name, "$game_spawn$", *m_spawn_name, ".spawn");
+        bool file_exists = FS.exist(file_name, "$game_spawn$", *m_spawn_name, ".spawn");
         R_ASSERT3(file_exists, "Can't find spawn file:", *m_spawn_name);
     }
     else
     {
-        bool file_exists = !!FS.exist(file_name, "$game_spawn$", *m_spawn_name, ".spawn");
+        bool file_exists = FS.exist(file_name, "$level$", "alife", ".spawn");
         R_ASSERT3(file_exists, "Can't find spawn file:", *m_spawn_name);
     }
 
@@ -96,7 +96,7 @@ void CALifeSpawnRegistry::load(LPCSTR spawn_name)
     }
     else
     {
-        R_ASSERT3(FS.exist(file_name, "$game_spawn$", *m_spawn_name, ".spawn"), "Can't find spawn file:", *m_spawn_name);
+        R_ASSERT3(FS.exist(file_name, "$level$", "alife", ".spawn"), "Can't find spawn file:", "alife.spawn");
     }
 
     //R_ASSERT3(FS.exist(file_name, "$game_spawn$", *m_spawn_name, ".spawn"), "Can't find spawn file:", *m_spawn_name);

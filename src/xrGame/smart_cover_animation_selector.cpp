@@ -62,7 +62,7 @@ void animation_selector::finalize()
 
 action_base* animation_selector::current_operator() const
 {
-    return (&smart_cast<smart_cover::action_base&>(m_planner->current_action()));
+    return (smart_cast<smart_cover::action_base*>(&m_planner->current_action()));
 }
 
 MotionID animation_selector::select_animation(bool& animation_movement_controller)

@@ -21,7 +21,6 @@ void CPurchaseList::process(CInifile& ini_file, LPCSTR section, CInventoryOwner&
 
     m_deficits.clear();
 
-    const CGameObject& game_object = smart_cast<const CGameObject&>(owner);
     CInifile::Sect& S = ini_file.r_section(section);
     auto I = S.Data.cbegin();
     auto E = S.Data.cend();
@@ -31,7 +30,8 @@ void CPurchaseList::process(CInifile& ini_file, LPCSTR section, CInventoryOwner&
 
         string256 temp0, temp1;
         THROW3(_GetItemCount(*(*I).second) == 2, "Invalid parameters in section", section);
-        process(game_object, (*I).first, atoi(_GetItem(*(*I).second, 0, temp0)),
+        auto game_object = smart_cast<CGameObject*>(&owner);
+        process(*game_object, (*I).first, atoi(_GetItem(*(*I).second, 0, temp0)),
             (float)atof(_GetItem(*(*I).second, 1, temp1)));
     }
 }

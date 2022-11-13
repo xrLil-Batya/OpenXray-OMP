@@ -11,6 +11,8 @@
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "Common/object_broker.h"
 #include "alife_human_brain.h"
+#include "../xrGame/game_type.h"
+#include "../xrGame/gamepersistent.h"
 
 #ifndef AI_COMPILER
 #include "ai_space.h"
@@ -1753,7 +1755,7 @@ BOOL CSE_ALifeMonsterBase::Net_Relevant()
 {
     if (g_pGamePersistent->GameType() == eGameIDSingle)
     {
-        inherited1::Net_Relevant();
+        return inherited1::Net_Relevant();
     }
     else
     {

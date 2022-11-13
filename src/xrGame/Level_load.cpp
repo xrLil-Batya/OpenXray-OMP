@@ -21,28 +21,21 @@ bool CLevel::Load_GameSpecific_Before()
     
     shared_str level = name().c_str();
 
-    if (OnClient())
-    {
-        FS.exist(fn_game, "$game_spawn$", *level, ".spawn");
+	if (GamePersistent().GameType() != eGameIDSingle && OnClient() && FS.exist(fn_game, "$level$", "alife.spawn")) {
+		spawn = FS.r_open		(fn_game);
 
-        spawn = FS.r_open(fn_game);
+		IReader						*chunk;
 
-        IReader* chunk;
+		chunk						= spawn->open_chunk(3);
+		R_ASSERT2					(chunk,"Spawn version mismatch - REBUILD SPAWN!");
+		ai().patrol_path_storage    (*chunk);
+		chunk->close				();
 
-        chunk = spawn->open_chunk(3);
-        R_ASSERT2(chunk, "Spawn version mismatch - REBUILD SPAWN!");
-        ai().patrol_path_storage(*chunk);
-        chunk->close();
-
-        m_chunk = spawn->open_chunk(4);
-        R_ASSERT2(m_chunk, "Spawn version mismatch - REBUILD SPAWN!");
-      
-        m_game_graph = xr_new<CGameGraph>(*m_chunk);
-        ai().SetGameGraph(m_game_graph);
-    }
-
-
-    if (!ai().get_alife() && FS.exist(fn_game, "$level$", "level.ai") && !net_Hosts.empty())
+		m_chunk						= spawn->open_chunk(4);
+		R_ASSERT2					(m_chunk,"Spawn version mismatch - REBUILD SPAWN!");
+        ai().SetGameGraph(xr_new<CGameGraph>(*m_chunk));
+	}
+    if (FS.exist(fn_game, "$level$", "level.ai") && !net_Hosts.empty())
         ai().load(net_SessionName());
 
     if (!ai().get_alife() && ai().get_game_graph() && FS.exist(fn_game, "$level$", "level.game"))

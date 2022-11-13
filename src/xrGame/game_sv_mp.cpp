@@ -21,6 +21,10 @@
 #include "xrGameSpyServer.h"
 #include "xrNetServer/NET_Messages.h"
 #include "xrCore/xr_token.h"
+#include "alife_simulator.h"
+#include "alife_object_registry.h"
+#include "alife_graph_registry.h"
+#include "alife_time_manager.h"
 
 #include "game_sv_mp_vote_flags.h"
 #include "player_name_modifyer.h"
@@ -52,6 +56,7 @@ game_sv_mp::game_sv_mp()
     : inherited(), m_bRankUp_Allowed(false), m_bVotingReal(false),
       m_uVoteStartTime(0), m_u8SpectatorModes(0)
 {
+	m_alife_simulator = nullptr;
     m_strWeaponsData = xr_new<CItemMgr>();
     m_bVotingActive = false;
     //------------------------------------------------------
@@ -63,7 +68,7 @@ game_sv_mp::game_sv_mp()
     round_statistics_dump_fn[0] = 0;
 }
 
-game_sv_mp::~game_sv_mp() { xr_delete(m_strWeaponsData); }
+game_sv_mp::~game_sv_mp() { xr_delete(m_alife_simulator); xr_delete(m_strWeaponsData); }
 void game_sv_mp::Update()
 {
     inherited::Update();
@@ -469,6 +474,7 @@ void game_sv_mp::Create(shared_str& options)
 {
     SetVotingActive(false);
     inherited::Create(options);
+	m_alife_simulator = xr_new<CALifeSimulator>(&server(),&options);
     //-------------------------------------------------------------------
     if (!g_bConsoleCommandsCreated)
     {

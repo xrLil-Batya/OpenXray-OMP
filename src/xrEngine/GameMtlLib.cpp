@@ -75,8 +75,10 @@ void CGameMtlLibrary::Load()
         return;
     }
 
-    R_ASSERT(material_pairs.empty());
-    R_ASSERT(materials.empty());
+	if(!material_pairs.empty())
+		return;
+	if(!materials.empty())
+		return;
 
     IReader* F = FS.r_open(name);
     IReader& fs = *F;

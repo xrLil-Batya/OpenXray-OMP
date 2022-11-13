@@ -1,11 +1,9 @@
 #include "stdafx.h"
 #include "game_cl_freemp.h"
 #include "clsid_game.h"
-#include "xr_level_controller.h"
+#include "../xrEngine/xr_level_controller.h"
 #include "UIGameFMP.h"
 #include "actor_mp_client.h"
-
-
 
 game_cl_freemp::game_cl_freemp() { 
     

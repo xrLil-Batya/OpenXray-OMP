@@ -218,16 +218,16 @@ _value_type CStalkerPropertyEvaluatorReadyToKill::evaluate()
     if (!m_min_ammo_count)
         return (true);
 
-    CWeapon& best_weapon = smart_cast<CWeapon&>(*m_object->best_weapon());
-    if (best_weapon.GetAmmoElapsed() <= (int)m_min_ammo_count)
+    CWeapon* best_weapon = smart_cast<CWeapon*>(m_object->best_weapon());
+    if (best_weapon->GetAmmoElapsed() <= (int)m_min_ammo_count)
     {
-        if (best_weapon.GetAmmoMagSize() <= (int)m_min_ammo_count)
-            return (best_weapon.GetState() != CWeapon::eReload);
+        if (best_weapon->GetAmmoMagSize() <= (int)m_min_ammo_count)
+            return (best_weapon->GetState() != CWeapon::eReload);
         else
             return (false);
     }
 
-    return (best_weapon.GetState() != CWeapon::eReload);
+    return (best_weapon->GetState() != CWeapon::eReload);
 }
 
 //////////////////////////////////////////////////////////////////////////

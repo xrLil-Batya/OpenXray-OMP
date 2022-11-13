@@ -535,7 +535,7 @@ void CActor::net_Import_Physic_proceed()
     CrPr_SetActivated(false);
     CrPr_SetActivationStep(0);
 };
-#include "actor_mp_client.h";
+#include "actor_mp_client.h"
 bool CActor::net_Spawn(CSE_Abstract* DC)
 {
     m_holder_id = ALife::_OBJECT_ID(-1);
