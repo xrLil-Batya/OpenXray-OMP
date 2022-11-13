@@ -120,7 +120,7 @@ CCustomMonster::~CCustomMonster()
     if (!GEnv.isDedicatedServer)
         Level().client_spawn_manager().dump(ID());
 #endif // DEBUG
-    if (!GEnv.isDedicatedServer)
+    // if (!GEnv.isDedicatedServer)
         Level().client_spawn_manager().clear(ID());
 }
 

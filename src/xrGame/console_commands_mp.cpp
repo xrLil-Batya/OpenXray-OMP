@@ -2040,13 +2040,18 @@ void register_mp_console_commands()
     CMD1(CCC_Net_SV_ClearStats, "net_sv_clearstats");
 
 // Network
-#ifdef DEBUG
-    CMD4(CCC_Integer, "net_cl_update_rate", &psNET_ClientUpdate, 20, 100);
+//#ifdef DEBUG
+    CMD4(CCC_Integer, "net_cl_update_rate", &psNET_ClientUpdate, 1, 300);
     CMD4(CCC_Integer, "net_cl_pending_lim", &psNET_ClientPending, 0, 10);
-#endif
-    CMD4(CCC_Integer, "net_sv_update_rate", &psNET_ServerUpdate, 1, 100);
+//#endif
+
+
+    CMD4(CCC_Integer, "net_sv_update_rate", &psNET_ServerUpdate, 1, 300);
     CMD4(CCC_Integer, "net_sv_pending_lim", &psNET_ServerPending, 0, 10);
+
     CMD4(CCC_Integer, "net_sv_gpmode", &psNET_GuaranteedPacketMode, 0, 2);
+
+
     CMD3(CCC_Mask, "net_sv_log_data", &psNET_Flags, NETFLAG_LOG_SV_PACKETS);
     CMD3(CCC_Mask, "net_cl_log_data", &psNET_Flags, NETFLAG_LOG_CL_PACKETS);
 #ifdef DEBUG

@@ -266,49 +266,87 @@ void xrServer::SendGameUpdateTo(IClient* client)
     game->net_Export_Update(Packet, xr_client->ID, xr_client->ID);
     SendTo(xr_client->ID, Packet, net_flags(FALSE, TRUE));
 }
+ 
 
 void xrServer::MakeUpdatePackets()
 {
     NET_Packet tmpPacket;
     u32 position;
 
-    m_updator.begin_updates();
+    
+    xrS_entities::iterator IActor = entities.begin();
+    xrS_entities::iterator EActor = entities.end();
 
-    xrS_entities::iterator I = entities.begin();
-    xrS_entities::iterator E = entities.end();
-    for (; I != E; ++I)
-    { // all entities
-        CSE_Abstract& Test = *(I->second);
-
-        if (0 == Test.owner)
-            continue;
-        if (!Test.net_Ready)
-            continue;
-        if (Test.s_flags.is(M_SPAWN_OBJECT_PHANTOM))
-            continue; // Surely: phantom
-        if (!Test.Net_Relevant())
-            continue;
-
-        tmpPacket.B.count = 0;
-        // write specific data
+    for (; IActor != EActor; ++IActor)
+    {
+        CSE_Abstract* Actor = IActor->second;
+        
+        if (!smart_cast<CSE_ALifeCreatureActor*>(Actor))
         {
-            tmpPacket.w_u16(Test.ID);
-            tmpPacket.w_chunk_open8(position);
-            Test.UPDATE_Write(tmpPacket);
-            u32 ObjectSize = u32(tmpPacket.w_tell() - position) - sizeof(u8);
-            tmpPacket.w_chunk_close8(position);
+            continue;
+        } 
 
-            if (ObjectSize == 0)
+        m_updator.begin_updates();
+        
+        xrS_entities::iterator I = entities.begin();
+        xrS_entities::iterator E = entities.end();
+        for (; I != E; ++I)
+        { // all entities
+            CSE_Abstract& Test = *(I->second);
+
+            if (0 == Test.owner)
                 continue;
+            if (!Test.net_Ready)
+                continue;
+            if (Test.s_flags.is(M_SPAWN_OBJECT_PHANTOM))
+                continue; // Surely: phantom
+            if (!Test.Net_Relevant())
+                continue;
+            float distance = Actor->Position().distance_to_xz(Test.Position());
+            if (Test.cast_monster_abstract() || Test.cast_human_abstract())
+            {
+                if (distance < 200)
+                {
+                   // Log("PositionDistance = ", distance);
+                    tmpPacket.B.count = 0;
+
+                    tmpPacket.w_u16(Test.ID);
+                    tmpPacket.w_chunk_open8(position);
+                    Test.UPDATE_Write(tmpPacket);
+                    u32 ObjectSize = u32(tmpPacket.w_tell() - position) - sizeof(u8);
+                    tmpPacket.w_chunk_close8(position);
+
+                    if (ObjectSize == 0)
+                        continue;
+                
+                }
+            }
+            else
+            {
+            
+                tmpPacket.B.count = 0;
+                    
+                    
+                tmpPacket.w_u16(Test.ID);
+                tmpPacket.w_chunk_open8(position);
+                Test.UPDATE_Write(tmpPacket);
+                u32 ObjectSize = u32(tmpPacket.w_tell() - position) - sizeof(u8);
+                tmpPacket.w_chunk_close8(position);
+
+                if (ObjectSize == 0)
+                continue;               
+            }
+
+
 #ifdef DEBUG
             if (g_Dump_Update_Write)
                 Msg("* %s : %d", Test.name(), ObjectSize);
-#endif
-            m_updator.write_update_for(Test.ID, tmpPacket);
-        }
-    } // all entities
-
-    m_updator.end_updates(m_update_begin, m_update_end);
+#endif  
+             m_updator.write_update_for(Test.ID, tmpPacket);
+        } // all entities
+     
+         m_updator.end_updates(m_update_begin, m_update_end);
+    }
 }
 
 void xrServer::SendUpdatePacketsToAll()

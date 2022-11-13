@@ -657,6 +657,74 @@ bool ray_pick(const Fvector& start, const Fvector& dir, float range,
     return false;
 }
 
+
+bool is_dedicated() { return GEnv.isDedicatedServer; }
+
+void print_msg(LPCSTR str) { Msg("[lua] %s", str); }
+
+int get_local_player_id() { return Game().local_player->GameID; }
+
+int get_g_actor_id()
+{
+    if (!Actor())
+        return -1;
+
+    return Actor()->ID();
+}
+
+void u_EventSendLevel(NET_Packet& P)
+{
+    // Msg("CallScript UpdateNetwork SendPacket");
+    Game().u_EventSend(P);
+}
+
+void u_EventGenLevel(NET_Packet& P, u32 type)
+{
+    // Msg("CallScript UpdateNetwork");
+    Game().u_EventGen(P, type, Game().local_player->GameID);
+}
+#include "actor_mp_client.h"
+
+u16 get_nearest_actor(Fvector vec)
+{
+    u16 id = 0;
+
+    for (u32 I = 0; I < Level().Objects.o_count(); I++)
+    {
+        IGameObject* _O = Level().Objects.o_get_by_iterator(I);
+
+        CActorMP* actor = smart_cast<CActorMP*>(_O);
+
+        if (actor)
+        if (actor->ID() != 0)
+        {
+            float distance = vec.distance_to_xz(actor->Position());
+            
+            if (distance < 100.0f)
+            {
+                 id = actor->ID();
+            }
+        }
+    }
+
+    if (id > 0)
+        return id;
+
+   
+}
+
+void GiveInfoToClient(shared_str info)
+{
+    NET_Packet packet;
+    Msg("GiveInfoToClient = Transport TO Server");
+    Game().u_EventGen(packet, M_SCRIPT, NULL);
+    packet.w_u32(MP_GIVEINFO);
+    packet.w_stringZ(info);
+    Game().u_EventSend(packet);
+}
+
+void IsGameFreeMP() { g_pGamePersistent->GameType() == eGameIDFreemp; }
+
 // XXX nitrocaster: one can export enum like class, without defining dummy type
 template<typename T>
 struct EnumCallbackType {};
@@ -774,7 +842,11 @@ IC static void CLevel_Export(lua_State* luaState)
         def("vertex_id", &vertex_id),
 
         def("game_id", &GameID),
-        def("ray_pick", &ray_pick)
+        def("ray_pick", &ray_pick),
+
+        def("get_g_actor_id", &get_g_actor_id),
+
+        def("get_local_player_id", &get_local_player_id)
     ],
 
     module(luaState, "actor_stats")
@@ -821,8 +893,22 @@ IC static void CLevel_Export(lua_State* luaState)
     [
         def("command_line", &command_line),
         def("IsGameTypeSingle", (bool (*)())&IsGameTypeSingle),
-        def("IsDynamicMusic", &IsDynamicMusic), def("render_get_dx_level", &render_get_dx_level),
-        def("IsImportantSave", &IsImportantSave)
+        def("IsGameTypeFreemp", (bool (*)())&IsGameFreeMP),
+      
+
+        def("IsDynamicMusic", &IsDynamicMusic), 
+        def("render_get_dx_level", &render_get_dx_level),
+        def("IsImportantSave", &IsImportantSave),
+
+        def("print_msg", &print_msg),
+        def("IsDedicated", (bool (*)())&is_dedicated), 
+        def("OnClient", (bool (*)())&OnClient), 
+        def("OnServer", (bool (*)())&OnServer),
+
+        def("u_EventSendLevel", &u_EventSendLevel), 
+        def("u_EventGenLevel", &u_EventGenLevel),
+        def("get_nearest_actor", &get_nearest_actor), 
+        def("GiveInfoToClient", &GiveInfoToClient)
     ];
 
     module(luaState, "relation_registry")

@@ -75,13 +75,13 @@ void CLevel::remove_objects()
     ph_commander().clear();
     ph_commander_scripts().clear();
 
-    if (!GEnv.isDedicatedServer)
+    //if (!GEnv.isDedicatedServer)
         space_restriction_manager().clear();
 
     psDeviceFlags.set(rsDisableObjectsAsCrows, b_stored);
     g_b_ClearGameCaptions = true;
 
-    if (!GEnv.isDedicatedServer)
+    //if (!GEnv.isDedicatedServer)
         GEnv.ScriptEngine->collect_all_garbage();
 
     stalker_animation_data_storage().clear();
@@ -96,7 +96,7 @@ void CLevel::remove_objects()
         if (!client_spawn_manager().registry().empty())
             client_spawn_manager().dump();
 #endif // DEBUG
-    if (!GEnv.isDedicatedServer)
+    //if (!GEnv.isDedicatedServer)
     {
         VERIFY(client_spawn_manager().registry().empty());
         client_spawn_manager().clear();
@@ -162,7 +162,7 @@ void CLevel::net_Stop()
         xr_delete(Server);
     }
 
-    if (!GEnv.isDedicatedServer)
+    //if (!GEnv.isDedicatedServer)
         GEnv.ScriptEngine->collect_all_garbage();
 
 #ifdef DEBUG

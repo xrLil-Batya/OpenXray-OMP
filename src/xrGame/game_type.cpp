@@ -16,3 +16,8 @@ bool IsGameTypeSingle() noexcept
 {
     return g_pGamePersistent->GameType() == eGameIDSingle;
 }
+
+bool IsGameTypeFreemp() noexcept 
+{
+    return g_pGamePersistent->GameType() == eGameIDFreemp;
+}

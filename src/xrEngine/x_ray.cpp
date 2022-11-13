@@ -25,7 +25,7 @@ ENGINE_API CApplication* pApp = nullptr;
 extern CRenderDevice Device;
 
 #ifdef MASTER_GOLD
-#define NO_MULTI_INSTANCES
+//#define NO_MULTI_INSTANCES
 #endif // #ifdef MASTER_GOLD
 
 //////////////////////////////////////////////////////////////////////////

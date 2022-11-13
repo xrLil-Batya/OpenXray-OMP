@@ -44,7 +44,7 @@ game_action actions[] = {
     { "accel",             kACCEL,             _both },
     { "sprint_toggle",     kSPRINT_TOGGLE,     _both },
 
-    { "turn_engine",       kENGINE,            _sp},
+    { "turn_engine",       kENGINE,            _both},
 
     { "cam_1",             kCAM_1,             _both },
     { "cam_2",             kCAM_2,             _both },
@@ -56,7 +56,7 @@ game_action actions[] = {
 
     { "torch",             kTORCH,             _both },
     { "night_vision",      kNIGHT_VISION,      _both },
-    { "show_detector",     kDETECTOR,          _sp },
+    { "show_detector",     kDETECTOR,          _both },
 
     { "wpn_1",             kWPN_1,             _both },
     { "wpn_2",             kWPN_2,             _both },
@@ -86,12 +86,12 @@ game_action actions[] = {
     { "quit",              kQUIT,              _both },
     { "console",           kCONSOLE,           _both },
     { "inventory",         kINVENTORY,         _both },
-    { "buy_menu",          kBUY,               _mp },
-    { "skin_menu",         kSKIN,              _mp },
-    { "team_menu",         kTEAM,              _mp },
-    { "active_jobs",       kACTIVE_JOBS,       _sp },
+    { "buy_menu",          kBUY,               _both },
+    { "skin_menu",         kSKIN,              _both },
+    { "team_menu",         kTEAM,              _both },
+    { "active_jobs",       kACTIVE_JOBS,       _both },
     { "map",                kMAP,               _both },
-    { "contacts",           kCONTACTS,          _sp },
+    { "contacts",           kCONTACTS,          _both },
     { "ext_1",              kEXT_1,             _both },
 
     { "vote_begin",        kVOTE_BEGIN,        _mp },
@@ -114,17 +114,17 @@ game_action actions[] = {
     { "speech_menu_8",     kSPEECH_MENU_8,     _mp },
     { "speech_menu_9",     kSPEECH_MENU_9,     _mp },
 
-    { "use_bandage",       kUSE_BANDAGE,       _sp },
-    { "use_medkit",        kUSE_MEDKIT,        _sp },
+    { "use_bandage",       kUSE_BANDAGE,       _both },
+    { "use_medkit",        kUSE_MEDKIT,        _both },
 
     { "quick_use_1",       kQUICK_USE_1,       _both },
     { "quick_use_2",       kQUICK_USE_2,       _both },
     { "quick_use_3",       kQUICK_USE_3,       _both },
     { "quick_use_4",       kQUICK_USE_4,       _both },
 
-    { "quick_save",        kQUICK_SAVE,        _sp },
-    { "quick_load",        kQUICK_LOAD,        _sp },
-    { "alife_command",     kALIFE_CMD,         _sp },
+    { "quick_save",        kQUICK_SAVE,        _both },
+    { "quick_load",        kQUICK_LOAD,        _both },
+    { "alife_command",   kALIFE_CMD,         _sp},
 
     { "custom1",           kCUSTOM1,           _sp },
     { "custom2",           kCUSTOM2,           _sp },

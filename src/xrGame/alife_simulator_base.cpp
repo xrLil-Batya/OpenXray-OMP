@@ -20,7 +20,9 @@
 #include "alife_registry_container.h"
 #include "xrServer.h"
 #include "xrAICore/Navigation/level_graph.h"
-#include "inventory_upgrade_manager.h"
+
+//#include "inventory_upgrade_manager.h"
+
 #include "Level.h"
 
 #ifdef DEBUG
@@ -43,7 +45,7 @@ CALifeSimulatorBase::CALifeSimulatorBase(IPureServer* server, LPCSTR section)
     m_smart_terrains = 0;
     m_groups = 0;
     m_registry_container = 0;
-    m_upgrade_manager = 0;
+    //m_upgrade_manager = 0;
 
     random().seed(u32(CPU::QPC() & 0xffffffff));
     m_can_register_objects = true;
@@ -63,7 +65,8 @@ void CALifeSimulatorBase::unload()
     xr_delete(m_smart_terrains);
     xr_delete(m_groups);
     xr_delete(m_registry_container);
-    xr_delete(m_upgrade_manager);
+    //xr_delete(m_upgrade_manager);
+
     m_initialized = false;
 
     if (g_pGameLevel)
@@ -82,7 +85,7 @@ void CALifeSimulatorBase::reload(LPCSTR section)
     m_smart_terrains = xr_new<CALifeSmartTerrainRegistry>();
     m_groups = xr_new<CALifeGroupRegistry>();
     m_registry_container = xr_new<CALifeRegistryContainer>();
-    m_upgrade_manager = xr_new<inventory::upgrade::Manager>();
+    //m_upgrade_manager = xr_new<inventory::upgrade::Manager>();
     m_initialized = true;
 }
 
@@ -261,13 +264,12 @@ void CALifeSimulatorBase::create(CSE_ALifeObject* object)
 
 void CALifeSimulatorBase::release(CSE_Abstract* abstract, bool alife_query)
 {
-#ifdef DEBUG
-    if (psAI_Flags.test(aiALife))
+//#ifdef DEBUG
+    if (true)//psAI_Flags.test(aiALife))
     {
-        Msg("[LSS] Releasing object [%s][%s][%d][%x]", abstract->name_replace(), *abstract->s_name, abstract->ID,
-            smart_cast<void*>(abstract));
+        Msg("[LSS] Releasing object [%s][%s][%d][%x]", abstract->name_replace(), *abstract->s_name, abstract->ID, smart_cast<void*>(abstract));
     }
-#endif
+//#endif
     CSE_ALifeDynamicObject* object = objects().object(abstract->ID);
     VERIFY(object);
 
@@ -290,11 +292,14 @@ void CALifeSimulatorBase::release(CSE_Abstract* abstract, bool alife_query)
         }
     }
 
-    unregister_object(object, alife_query);
+
+    if (object)
+       unregister_object(object, alife_query);
 
     object->m_bALifeControl = false;
 
     if (alife_query)
+        if (abstract)
         server().entity_Destroy(abstract);
 }
 

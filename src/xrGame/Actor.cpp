@@ -200,7 +200,7 @@ CActor::CActor() : CEntityAlive(), current_ik_cam_shift(0)
     m_iLastHittingWeaponID = u16(-1);
     m_statistic_manager = NULL;
     //-----------------------------------------------------------------------------------
-    m_memory = GEnv.isDedicatedServer ? 0 : xr_new<CActorMemory>(this);
+    m_memory = xr_new<CActorMemory>(this);
     m_bOutBorder = false;
     m_hit_probability = 1.f;
     m_feel_touch_characters = 0;
@@ -256,7 +256,7 @@ void CActor::reinit()
     material().reinit();
 
     m_pUsableObject = NULL;
-    if (!GEnv.isDedicatedServer)
+    //if (!GEnv.isDedicatedServer)
         memory().reinit();
 
     set_input_external_handler(0);
@@ -1108,7 +1108,7 @@ void CActor::UpdateCL()
             HUD().SetFirstBulletCrosshairDisp(pWeapon->GetFirstBulletDisp());
 #endif
 
-            BOOL B = !((mstate_real & mcLookout) && !IsGameTypeSingle());
+            BOOL B = !((mstate_real & mcLookout) && false); // IsGameTypeSingle()
 
             psHUD_Flags.set(HUD_WEAPON_RT, B);
 
@@ -1437,7 +1437,7 @@ void CActor::shedule_Update(u32 DT)
         m_pVehicleWeLookingAt = smart_cast<CHolderCustom*>(game_object);
         CEntityAlive* pEntityAlive = smart_cast<CEntityAlive*>(game_object);
 
-        if (GameID() == eGameIDSingle)
+        if (/*GameID() == eGameIDSingle*/true)
         {
             if (m_pUsableObject && m_pUsableObject->tip_text())
             {
@@ -1549,8 +1549,8 @@ float CActor::missile_throw_force() { return 0.f; }
 void CActor::OnHUDDraw(CCustomHUD* hud, IRenderable* root)
 {
     R_ASSERT(IsFocused());
-    if (!((mstate_real & mcLookout) && !IsGameTypeSingle()))
-        g_player_hud->render_hud(root);
+    if (!((mstate_real & mcLookout) && false))
+     g_player_hud->render_hud(root);
 }
 
 void CActor::RenderIndicator(Fvector dpos, float r1, float r2, const ui_shader& IndShader)

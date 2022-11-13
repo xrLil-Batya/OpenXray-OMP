@@ -174,6 +174,11 @@ public:
     virtual bool net_SaveRelevant();
     virtual void net_Relcase(IGameObject* O);
 
+    u16 u_last_torso_motion_idx;
+    u16 u_last_legs_motion_idx;
+    u16 u_last_head_motion_idx;
+    u16 u_last_script_motion_idx;
+
     // save/load server serialization
     virtual void save(NET_Packet& output_packet);
     virtual void load(IReader& input_packet);
@@ -264,6 +269,15 @@ public:
     virtual bool human_being() const { return (true); }
     bool undetected_anomaly();
     bool inside_anomaly();
+
+private: 
+    	void ApplyAnimation(
+                            u16 u_torso_motion_idx, u8 u_torso_motion_slot, 
+                            u16 u_legs_motion_idx, u8 u_legs_motion_slot,
+                            u16 u_head_motion_idx, u8 u_head_motion_slot, 
+                            u16 u_script_motion_idx, u8 u_script_motion_slot
+        );
+
 
 private:
     bool m_can_kill_member;

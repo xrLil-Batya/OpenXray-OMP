@@ -56,9 +56,9 @@ void CActor::IR_OnKeyboardPress(int cmd)
     {
     case kWPN_FIRE:
     {
-        if ((mstate_wishful & mcLookout) && !IsGameTypeSingle())
+        if ( (mstate_wishful & mcLookout) && false )
             return;
-
+            
         u16 slot = inventory().GetActiveSlot();
         if (inventory().ActiveItem() && (slot == INV_SLOT_3 || slot == INV_SLOT_2))
             mstate_wishful &= ~mcSprint;
@@ -643,16 +643,32 @@ void CActor::ActorUse()
     if (m_pUsableObject && NULL == m_pObjectWeLookingAt->cast_inventory_item())
     {
         m_pUsableObject->use(this);
+
+        IGameObject* game = smart_cast<IGameObject*>(m_pUsableObject);
+
+        if (OnClient())
+        {
+            NET_Packet packet;
+
+            Level().game->u_EventGen(packet, M_SCRIPT, this->ID());
+            packet.w_u32(MP_USE);
+            packet.w_u16(game->ID());
+            // packet.w_u16(who_use->ID());
+
+            Level().game->u_EventSend(packet);
+            Log("PacketSendToServer[MP_USE] == ", this->ID());
+        }
+
     }
 
     if (m_pInvBoxWeLookingAt && m_pInvBoxWeLookingAt->nonscript_usable())
     {
-        CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-        if (pGameSP) // single
+        //CUIGameSP* pGameSP = smart_cast<CUIGameSP*>();
+        if (CurrentGameUI()) // single
         {
             if (!m_pInvBoxWeLookingAt->closed())
             {
-                pGameSP->StartCarBody(this, m_pInvBoxWeLookingAt);
+                CurrentGameUI()->StartCarBody(this, m_pInvBoxWeLookingAt);
             }
         }
         return;
@@ -666,7 +682,7 @@ void CActor::ActorUse()
 
             VERIFY(pEntityAliveWeLookingAt);
 
-            if (IsGameTypeSingle())
+            if (/*IsGameTypeSingle()*/true)
             {
                 if (pEntityAliveWeLookingAt->g_Alive())
                 {
@@ -675,15 +691,14 @@ void CActor::ActorUse()
                 else
                 {
                     //только если находимся в режиме single
-                    CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-                    if (pGameSP)
+                    //CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+                    if (CurrentGameUI())
                     {
                         if (!m_pPersonWeLookingAt->deadbody_closed_status())
                         {
-                            if (pEntityAliveWeLookingAt->AlreadyDie() &&
-                                pEntityAliveWeLookingAt->GetLevelDeathTime() + 3000 < Device.dwTimeGlobal)
-                                // 99.9% dead
-                                pGameSP->StartCarBody(this, m_pPersonWeLookingAt);
+                            if (pEntityAliveWeLookingAt->AlreadyDie() && pEntityAliveWeLookingAt->GetLevelDeathTime() + 3000 < Device.dwTimeGlobal)
+                                
+                                CurrentGameUI()->StartCarBody(this, m_pPersonWeLookingAt);
                         }
                     }
                 }

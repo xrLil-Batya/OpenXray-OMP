@@ -277,7 +277,7 @@ void CUIActorMenu::InitializeUniversal(CUIXml& uiXml)
     //-	m_ItemInfo->SetAutoDelete			(true);
     //-	AttachChild							(m_ItemInfo);
 
-    if (ai().get_alife())
+    //if (ai().get_alife())
     {
         m_upgrade_info = xr_new<UIInvUpgradeInfo>();
         m_upgrade_info->SetAutoDelete(true);

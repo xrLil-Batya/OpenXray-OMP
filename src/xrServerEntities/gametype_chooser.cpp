@@ -13,12 +13,19 @@ enum ERPGameType
     rpgtGameTeamDeathmatch,
     rpgtGameArtefactHunt,
     rpgtGameCaptureTheArtefact,
+    rpgtGameFreeMp,
+
     rpgtGameCount,
 };
 
-const xr_token rpoint_game_type[] = {{"Any game", rpgtGameAny}, {"Deathmatch", rpgtGameDeathmatch},
-    {"TeamDeathmatch", rpgtGameTeamDeathmatch}, {"ArtefactHunt", rpgtGameArtefactHunt},
-    {"CaptureTheArtefact", rpgtGameCaptureTheArtefact}, {nullptr, 0}};
+const xr_token rpoint_game_type[] = {
+    {"Any game", rpgtGameAny}, 
+    {"Deathmatch", rpgtGameDeathmatch},
+    {"TeamDeathmatch", rpgtGameTeamDeathmatch}, 
+    {"ArtefactHunt", rpgtGameArtefactHunt},
+    {"CaptureTheArtefact", rpgtGameCaptureTheArtefact}, 
+    {"FreeMp", rpgtGameFreeMp},
+    {nullptr, 0}};
 
 #ifdef _EDITOR
 bool GameTypeChooser::LoadStream(IReader& F)

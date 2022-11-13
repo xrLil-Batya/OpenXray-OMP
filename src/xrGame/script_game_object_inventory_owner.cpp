@@ -77,26 +77,26 @@ bool CScriptGameObject::DisableInfoPortion(LPCSTR info_id)
 
 void _AddIconedTalkMessage(cpcstr text, cpcstr texture_name, const Frect& tex_rect, cpcstr templ_name)
 {
-    CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-    if (!pGameSP)
+    //CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+    if (!CurrentGameUI())
         return;
 
-    if (pGameSP->TalkMenu->IsShown())
+    if (CurrentGameUI()->TalkMenu->IsShown())
     {
-        pGameSP->TalkMenu->AddIconedMessage(
+        CurrentGameUI()->TalkMenu->AddIconedMessage(
             text, texture_name, tex_rect, templ_name ? templ_name : "iconed_answer_item");
     }
 }
 
 void _AddIconedTalkMessage(LPCSTR caption, LPCSTR text, LPCSTR texture_name, LPCSTR templ_name)
 {
-    CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-    if (!pGameSP)
+    //CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+    if (!CurrentGameUI())
         return;
 
-    if (pGameSP->TalkMenu->IsShown())
+    if (CurrentGameUI()->TalkMenu->IsShown())
     {
-        pGameSP->TalkMenu->AddIconedMessage(
+        CurrentGameUI()->TalkMenu->AddIconedMessage(
             caption, text, texture_name, templ_name ? templ_name : "iconed_answer_item");
     }
 }
@@ -826,13 +826,13 @@ void CScriptGameObject::SwitchToTrade()
         return;
 
     //только если находимся в режиме single
-    CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-    if (!pGameSP)
+    //CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+    if (!CurrentGameUI())
         return;
 
-    if (pGameSP->TalkMenu->IsShown())
+    if (CurrentGameUI()->TalkMenu->IsShown())
     {
-        pGameSP->TalkMenu->SwitchToTrade();
+        CurrentGameUI()->TalkMenu->SwitchToTrade();
     }
 }
 
@@ -843,13 +843,13 @@ void CScriptGameObject::SwitchToUpgrade()
         return;
 
     //только если находимся в режиме single
-    CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-    if (!pGameSP)
+    //CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+    if (!CurrentGameUI())
         return;
 
-    if (pGameSP->TalkMenu->IsShown())
+    if (CurrentGameUI()->TalkMenu->IsShown())
     {
-        pGameSP->TalkMenu->SwitchToUpgrade();
+        CurrentGameUI()->TalkMenu->SwitchToUpgrade();
     }
 }
 
@@ -1787,6 +1787,7 @@ void CScriptGameObject::Weapon_AddonDetach(pcstr item_section)
     if (weapon->CanDetach(item_section))
         weapon->Detach(item_section, true);
 }
+ 
 
 bool CScriptGameObject::InstallUpgrade(pcstr upgrade)
 {
@@ -1799,8 +1800,7 @@ bool CScriptGameObject::InstallUpgrade(pcstr upgrade)
 
     if (!pSettings->section_exist(upgrade))
         return false;
-
-    return ai().alife().inventory_upgrade_manager().upgrade_install(*item, upgrade, false);
+    return Game().inventory_upgrade_manager().upgrade_install(*item, upgrade, false);
 }
 
 bool CScriptGameObject::HasUpgrade(pcstr upgrade) const

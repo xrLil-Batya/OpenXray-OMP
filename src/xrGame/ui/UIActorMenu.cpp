@@ -47,12 +47,36 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 {
     R_ASSERT(!IsShown());
     m_pPartnerInvOwner = io;
+
+    if (m_pPartnerInvOwner)
+    {
+        if (m_pPartnerInvOwner->use_simplified_visual())
+        {
+            m_PartnerCharacterInfo->ClearInfo();
+        }
+        else
+        {
+            if (IsGameTypeSingle())
+            {
+                m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
+            }
+            else
+            {
+                m_PartnerCharacterInfo->InitCharacterMP(m_pPartnerInvOwner);
+            }
+        }
+
+        SetInvBox(NULL);
+    }
+    else
+        m_PartnerCharacterInfo->ClearInfo();
 }
 
 void CUIActorMenu::InitActorInfo()
 {
     if (!GetModeSpecificActorInfo())
         return;
+
     if (IsGameTypeSingle())
     {
         if (m_pActorInvOwner)
@@ -83,7 +107,11 @@ void CUIActorMenu::InitPartnerInfo()
         }
         else
         {
-            GetModeSpecificPartnerInfo(m_currMenuMode)->InitCharacter(m_pPartnerInvOwner->object_id());
+            if (IsGameTypeSingle())
+                 GetModeSpecificPartnerInfo(m_currMenuMode)->InitCharacter(m_pPartnerInvOwner->object_id());
+            else  
+                GetModeSpecificPartnerInfo(m_currMenuMode)->InitCharacterMP(m_pPartnerInvOwner); 
+             
         }
 
         SetInvBox(nullptr);
@@ -156,8 +184,10 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
         default: R_ASSERT(0); break;
         }
         InitActorInfo();
+
         if (m_currMenuMode != mmUndefined && m_currMenuMode != mmInventory)
             InitPartnerInfo();
+
         CurModeToScript();
     } // if
 
@@ -266,6 +296,7 @@ void CUIActorMenu::Update()
         m_ItemInfo->Update();
     if (m_hint_wnd)
         m_hint_wnd->Update();
+    UpdateActorMP();
 }
 
 bool CUIActorMenu::StopAnyMove() // true = актёр не идёт при открытом меню

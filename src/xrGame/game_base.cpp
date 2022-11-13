@@ -240,6 +240,8 @@ CLASS_ID game_GameState::getCLASS_ID(LPCSTR game_type_name, bool isServer)
 
     case eGameIDCaptureTheArtefact: return (isServer) ? TEXT2CLSID("SV_CTA") : TEXT2CLSID("CL_CTA"); break;
 
+    case eGameIDFreemp: return (isServer) ? TEXT2CLSID("SV_FPM") : TEXT2CLSID("CL_FMP"); break;
+
     default: return (TEXT2CLSID("")); break;
     }
 }

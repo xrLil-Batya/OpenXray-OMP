@@ -28,12 +28,12 @@ MotionID CStalkerAnimationManager::assign_head_animation()
 {
     const ANIM_VECTOR& animations = m_data_storage->m_head_animations.A;
 
-    CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-    if (pGameSP && pGameSP->TalkMenu->IsShown())
+    //CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+    if (CurrentGameUI() && CurrentGameUI()->TalkMenu->IsShown())
     {
-        if (pGameSP->TalkMenu->OthersInvOwner() == m_object)
+        if (CurrentGameUI()->TalkMenu->OthersInvOwner() == m_object)
         {
-            if (pGameSP->TalkMenu->playing_sound())
+            if (CurrentGameUI()->TalkMenu->playing_sound())
                 return (animations[1]);
         }
     }

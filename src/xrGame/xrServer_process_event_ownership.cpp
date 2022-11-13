@@ -22,10 +22,9 @@ void xrServer::Process_event_ownership(NET_Packet& P, ClientID sender, u32 time,
     CSE_Abstract* e_parent = game->get_entity_from_eid(id_parent);
     CSE_Abstract* e_entity = game->get_entity_from_eid(id_entity);
 
-#ifdef MP_LOGGING
-    Msg("--- SV: Process ownership take: parent [%d][%s], item [%d][%s]", id_parent,
-        e_parent ? e_parent->name_replace() : "null_parent", id_entity, e_entity ? e_entity->name() : "null_entity");
-#endif // MP_LOGGING
+//#ifdef MP_LOGGING
+    Msg("--- SV: Process ownership take: parent [%d][%s], item [%d][%s]", id_parent, e_parent ? e_parent->name_replace() : "null_parent", id_entity, e_entity ? e_entity->name() : "null_entity");
+//#endif // MP_LOGGING
 
     if (!e_parent)
     {
@@ -65,20 +64,20 @@ void xrServer::Process_event_ownership(NET_Packet& P, ClientID sender, u32 time,
     xrClientData* c_entity = e_entity->owner;
     xrClientData* c_from = ID_to_client(sender);
 
-    if ((GetServerClient() != c_from) && (c_parent != c_from))
+    if (IsGameTypeSingle() && (GetServerClient() != c_from) && (c_parent != c_from))
     {
         // trust only ServerClient or new_ownerClient
         return;
     }
 
-    CSE_ALifeCreatureAbstract* alife_entity = smart_cast<CSE_ALifeCreatureAbstract*>(e_parent);
-    if (alife_entity && !alife_entity->g_Alive() && game->Type() != eGameIDSingle)
-    {
-#ifdef MP_LOGGING
-        Msg("--- SV: WARNING: dead player [%d] tries to take item [%d]", id_parent, id_entity);
-#endif //#ifdef MP_LOGGING
-        return;
-    };
+//    CSE_ALifeCreatureAbstract* alife_entity = smart_cast<CSE_ALifeCreatureAbstract*>(e_parent);
+//    if (alife_entity && !alife_entity->g_Alive() && game->Type() != eGameIDSingle)
+//    {
+//#ifdef MP_LOGGING
+//        Msg("--- SV: WARNING: dead player [%d] tries to take item [%d]", id_parent, id_entity);
+//#endif //#ifdef MP_LOGGING
+//        return;
+//    };
 
     // Game allows ownership of entity
     if (game->OnTouch(id_parent, id_entity, bForced))

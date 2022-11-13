@@ -134,7 +134,7 @@ void CScriptBinder::net_Destroy()
 
 void CScriptBinder::set_object(CScriptBinderObject* object)
 {
-    if (IsGameTypeSingle())
+    //if (IsGameTypeSingle())
     {
         VERIFY2(!m_object, "Cannot bind to the object twice!");
 #ifdef _DEBUG
@@ -142,10 +142,12 @@ void CScriptBinder::set_object(CScriptBinderObject* object)
 #endif // _DEBUG
         m_object = object;
     }
+    /*
     else
     {
         xr_delete(object);
     }
+    */
 }
 
 void CScriptBinder::shedule_Update(u32 time_delta)
@@ -158,6 +160,7 @@ void CScriptBinder::shedule_Update(u32 time_delta)
         }
         catch (...)
         {
+            Msg("ScriptBinder[Shedule_update] [crashed] [%s] ", m_object->m_object->Name());
             clear();
         }
     }

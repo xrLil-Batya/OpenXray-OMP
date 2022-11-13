@@ -8,6 +8,8 @@
 #include "script_game_object.h"
 #include "xrCommon/xr_string.h"
 
+
+
 // fwd. decl.
 class CUI;
 class CTeamBaseZone;
@@ -23,7 +25,14 @@ struct KillMessageStruct;
 class CUIMainIngameWnd;
 class CUIMessagesWindow;
 
-class StaticDrawableWrapper : public IPureDestroyableObject
+//mpInventoryAnd Talk Window
+
+class CInventoryBox;
+class CUITradeWnd;
+class CUITalkWnd;
+
+
+struct StaticDrawableWrapper : public IPureDestroyableObject
 {
 public:
     CUIStatic* m_static;
@@ -78,6 +87,11 @@ private:
 
 extern CMapListHelper gMapListHelper;
 
+#include "ui/UIPdaWnd.h"
+#include "ui/UITalkWnd.h"
+
+
+
 class CUIGameCustom : public FactoryObjectBase, public CDialogHolder, public CUIResetNotifier
 {
 protected:
@@ -87,11 +101,13 @@ protected:
     CUIActorMenu* ActorMenu;
     CUIPdaWnd* PdaMenu;
     bool showGameIndicators;
+   
 
 public:
     // XXX nitrocaster: make not public
     CUIMainIngameWnd* UIMainIngameWnd;
     CUIMessagesWindow* m_pMessagesWnd;
+    CUITalkWnd* TalkMenu;
 
     CUIGameCustom();
     virtual ~CUIGameCustom();
@@ -115,8 +131,10 @@ public:
     bool GameIndicatorsShown() { return showGameIndicators; }
     void ShowCrosshair(bool show) { psHUD_Flags.set(HUD_CROSSHAIR_RT, show); }
     bool CrosshairShown() { return !!psHUD_Flags.test(HUD_CROSSHAIR_RT); }
-    virtual void HideShownDialogs() {}
-    virtual void ReinitDialogs() {}
+    
+    void HideShownDialogs();
+    void ReinitDialogs();
+   
     StaticDrawableWrapper* AddCustomStatic(const char* id, bool singleInstance, float ttlDefault = -1.0f);
     StaticDrawableWrapper* GetCustomStatic(const char* id);
     void RemoveCustomStatic(const char* id);
@@ -130,6 +148,13 @@ public:
     void UpdatePda();
     void update_fake_indicators(u8 type, float power);
     void enable_fake_indicators(bool enable);
+
+    void StartCarBody(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner);
+    void StartCarBody(CInventoryOwner* pActorInv, CInventoryBox* pBox);
+    void StartTalk(bool disable_break);
+    void StartTrade(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner);
+    void StartUpgrade(CInventoryOwner* pActorInv, CInventoryOwner* pMech);
+
 };
 
 extern CUIGameCustom* CurrentGameUI();

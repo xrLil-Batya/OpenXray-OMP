@@ -296,6 +296,8 @@ void CMapLocation::CalcPosition()
         if (m_owner_se_object)
         {
             m_position_global = m_owner_se_object->draw_level_position();
+            Msg("DrawPos[%s][%s][%s]", (int)m_position_global.x, (int)m_position_global.y, (int)m_position_global.z);
+
             m_cached.m_Position.set(m_position_global.x, m_position_global.z);
         }
     }

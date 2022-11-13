@@ -257,19 +257,23 @@ void CALifeSimulator__release(CALifeSimulator* self, CSE_Abstract* object, bool)
 
     CSE_ALifeObject* alife_object = smart_cast<CSE_ALifeObject*>(object);
     THROW(alife_object);
-    if (!alife_object->m_bOnline)
+    
+    if (alife_object)
     {
-        self->release(object, true);
-        return;
-    }
+        if (!alife_object->m_bOnline)
+        {
+            self->release(object, true);
+            return;
+        }
 
-    // awful hack, for stohe only
-    NET_Packet packet;
-    packet.w_begin(M_EVENT);
-    packet.w_u32(Level().timeServer());
-    packet.w_u16(GE_DESTROY);
-    packet.w_u16(object->ID);
-    Level().Send(packet, net_flags(TRUE, TRUE));
+        // awful hack, for stohe only
+        NET_Packet packet;
+        packet.w_begin(M_EVENT);
+        packet.w_u32(Level().timeServer());
+        packet.w_u16(GE_DESTROY);
+        packet.w_u16(object->ID);
+        Level().Send(packet, net_flags(TRUE, TRUE));
+    }
 }
 
 LPCSTR get_level_name(const CALifeSimulator* self, int level_id)

@@ -3,6 +3,7 @@
 #include "game_base.h"
 #include "xrCore/client_id.h"
 #include "WeaponAmmo.h"
+#include "inventory_upgrade_manager.h"
 
 class NET_Packet;
 class CGameObject;
@@ -45,13 +46,19 @@ public:
 
     WeaponUsageStatistic* m_WeaponUsageStatistic;
 
+    virtual void TranslateGameMessage(u32 msg, NET_Packet& P);
+
+    virtual void TranslateGameMessageScript(u32 msg, NET_Packet& P);
+
+
+
 private:
     void switch_Phase(u32 new_phase) { inherited::switch_Phase(new_phase); };
 protected:
     virtual void OnSwitchPhase(u32 old_phase, u32 new_phase);
 
     // for scripting enhancement
-    virtual void TranslateGameMessage(u32 msg, NET_Packet& P);
+   
 
     virtual shared_str shedule_Name() const { return shared_str("game_cl_GameState"); };
     virtual float shedule_Scale() { return 1.0f; };
@@ -120,4 +127,14 @@ public:
 
     virtual bool IsPlayerInTeam(game_PlayerState* ps, ETeam team) { return ps->team == team; };
     virtual void OnConnected();
+
+
+    inventory::upgrade::Manager* m_upgrade_manager;
+
+    inline inventory::upgrade::Manager& inventory_upgrade_manager() const
+    {
+        VERIFY(initialized());
+        VERIFY(m_upgrade_manager);
+        return *m_upgrade_manager;
+    }
 };

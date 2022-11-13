@@ -23,7 +23,6 @@
 #endif
 #include "xrSASH.h"
 #include "xr_ioc_cmd.h"
-
 #include "xrCore/Threading/TaskManager.hpp"
 
 // global variables

@@ -162,7 +162,7 @@ void CHUDTarget::Render()
             CEntityAlive* pCurEnt = smart_cast<CEntityAlive*>(Level().CurrentEntity());
             PIItem l_pI = smart_cast<PIItem>(PP.RQ.O);
 
-            if (IsGameTypeSingle())
+            if (IsGameTypeSingle() || g_pGamePersistent->GameType() == eGameIDFreemp)
             {
                 CInventoryOwner* our_inv_owner = smart_cast<CInventoryOwner*>(pCurEnt);
 

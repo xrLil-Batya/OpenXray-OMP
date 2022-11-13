@@ -293,7 +293,7 @@ float CVisualMemoryManager::object_visible_distance(const CGameObject* game_obje
 
 float CVisualMemoryManager::object_luminocity(const CGameObject* game_object) const
 {
-    if (!smart_cast<CActor const*>(game_object))
+    if (!smart_cast<CActor const*>(game_object) || !IsGameTypeSingle())
         return (1.f);
     float luminocity = const_cast<CGameObject*>(game_object)->ROS()->get_luminocity();
     float power = log(luminocity > .001f ? luminocity : .001f) * current_state().m_luminocity_factor;
@@ -865,7 +865,7 @@ void CVisualMemoryManager::load(IReader& packet)
         const CClientSpawnManager::CSpawnCallback* spawn_callback =
             Level().client_spawn_manager().callback(delayed_object.m_object_id, m_object->ID());
         if (!spawn_callback || !spawn_callback->m_object_callback)
-            if (!GEnv.isDedicatedServer)
+            //if (!GEnv.isDedicatedServer)
                 Level().client_spawn_manager().add(delayed_object.m_object_id, m_object->ID(), callback);
 #ifdef DEBUG
             else

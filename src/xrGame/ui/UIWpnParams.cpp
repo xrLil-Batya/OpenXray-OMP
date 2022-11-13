@@ -79,7 +79,7 @@ bool CUIWpnParams::InitFromXml(CUIXml& xml_doc)
     m_progressHandling.InitFromXml(xml_doc, "wpn_params:progress_handling");
     m_progressRPM.InitFromXml(xml_doc, "wpn_params:progress_rpm");
 
-    if (IsGameTypeSingle())
+    //if (IsGameTypeSingle())
     {
         m_stAmmo = UIHelper::CreateStatic(xml_doc, "wpn_params:static_ammo", this, false);
         m_textAmmoCount = UIHelper::CreateTextWnd(xml_doc, "wpn_params:cap_ammo_count", this, false);
@@ -147,7 +147,7 @@ void CUIWpnParams::SetInfo(CInventoryItem* slot_wpn, CInventoryItem& cur_wpn)
     m_progressHandling.SetTwoPos(cur_hand, slot_hand);
     m_progressRPM.SetTwoPos(cur_rpm, slot_rpm);
 
-    if (IsGameTypeSingle())
+    //if (IsGameTypeSingle())
     {
         CWeapon* weapon = cur_wpn.cast_weapon();
         if (!weapon)

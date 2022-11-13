@@ -148,13 +148,6 @@ ASB_INL CALifeRegistryContainer& CALifeSimulatorBase::registry() const
     return *m_registry_container;
 }
 
-ASB_INL inventory::upgrade::Manager& CALifeSimulatorBase::inventory_upgrade_manager() const
-{
-    VERIFY(initialized());
-    VERIFY(m_upgrade_manager);
-    return *m_upgrade_manager;
-}
-
 ASB_INL CRandom32& CALifeSimulatorBase::random() { return m_random; }
 ASB_INL void CALifeSimulatorBase::setup_command_line(shared_str* command_line)
 { m_server_command_line = command_line; }

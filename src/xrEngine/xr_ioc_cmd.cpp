@@ -785,6 +785,8 @@ void CCC_Register()
     CMD1(CCC_Fullscreen, "rs_fullscreen");
     CMD1(CCC_Refresh60hz, "rs_refresh_60hz");
     CMD3(CCC_Mask, "rs_stats", &psDeviceFlags, rsStatistic);
+    CMD3(CCC_Mask, "rs_netstats", &psDeviceFlags, rsShowNetworkStatics);
+
     CMD3(CCC_Mask, "rs_fps", &psDeviceFlags, rsShowFPS);
     CMD3(CCC_Mask, "rs_fps_graph", &psDeviceFlags, rsShowFPSGraph);
     CMD4(CCC_Float, "rs_vis_distance", &psVisDistance, 0.4f, 1.5f);

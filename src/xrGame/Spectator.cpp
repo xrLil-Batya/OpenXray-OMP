@@ -540,7 +540,7 @@ bool CSpectator::net_Spawn(CSE_Abstract* DC)
 void CSpectator::net_Destroy()
 {
     inherited::net_Destroy();
-    if (!GEnv.isDedicatedServer)
+    // if (!GEnv.isDedicatedServer)
         Level().MapManager().OnObjectDestroyNotify(ID());
 }
 

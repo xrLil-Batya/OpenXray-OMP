@@ -86,7 +86,7 @@ void CInventoryOwner::reinit()
     m_item_to_spawn = shared_str();
     m_ammo_in_box_to_spawn = 0;
 }
-
+#include "actor_mp_server.h"
 // call this after CGameObject::net_Spawn
 bool CInventoryOwner::net_Spawn(CSE_Abstract* DC)
 {
@@ -105,7 +105,7 @@ bool CInventoryOwner::net_Spawn(CSE_Abstract* DC)
         return FALSE;
     CSE_Abstract* E = (CSE_Abstract*)(DC);
 
-    if (IsGameTypeSingle())
+      if (/*IsGameTypeSingle() ||*/ !smart_cast<CSE_ActorMP*>(E))
     {
         CSE_ALifeTraderAbstract* pTrader = NULL;
         if (E)
@@ -137,9 +137,9 @@ bool CInventoryOwner::net_Spawn(CSE_Abstract* DC)
     {
         CharacterInfo().m_SpecificCharacter.Load("mp_actor");
         CharacterInfo().InitSpecificCharacter("mp_actor");
-        CharacterInfo().m_SpecificCharacter.data()->m_sGameName =
-            (E->name_replace()[0]) ? E->name_replace() : *pThis->cName();
+        CharacterInfo().m_SpecificCharacter.data()->m_sGameName = (E->name_replace()[0]) ? E->name_replace() : *pThis->cName();
         m_game_name = (E->name_replace()[0]) ? E->name_replace() : *pThis->cName();
+
     }
 
     if (!pThis->Local())
@@ -262,9 +262,9 @@ void CInventoryOwner::StopTalk()
     m_pTalkPartner = NULL;
     m_bTalking = false;
 
-    CUIGameSP* ui_sp = smart_cast<CUIGameSP*>(CurrentGameUI());
-    if (ui_sp && ui_sp->TalkMenu->IsShown())
-        ui_sp->TalkMenu->Stop();
+    //CUIGameSP* ui_sp = smart_cast<CUIGameSP*>();
+    if (CurrentGameUI() && CurrentGameUI()->TalkMenu->IsShown())
+        CurrentGameUI()->TalkMenu->Stop();
 }
 
 bool CInventoryOwner::IsTalking() { return m_bTalking; }
@@ -273,10 +273,10 @@ void CInventoryOwner::StopTrading()
 {
     m_bTrading = false;
 
-    CUIGameSP* ui_sp = smart_cast<CUIGameSP*>(CurrentGameUI());
-    if (ui_sp)
+    //CUIGameSP* ui_sp = smart_cast<CUIGameSP*>(CurrentGameUI());
+    if (CurrentGameUI())
     {
-        ui_sp->HideActorMenu();
+        CurrentGameUI()->HideActorMenu();
     }
 }
 
@@ -331,8 +331,7 @@ void CInventoryOwner::spawn_supplies()
         return;
 
     if (use_bolts())
-        Level().spawn_item(
-            "bolt", game_object->Position(), game_object->ai_location().level_vertex_id(), game_object->ID());
+        Level().spawn_item("bolt", game_object->Position(), game_object->ai_location().level_vertex_id(), game_object->ID());
 
     if (!ai().get_alife() && IsGameTypeSingle())
     {
@@ -369,17 +368,18 @@ void CInventoryOwner::SetCommunity(CHARACTER_COMMUNITY_INDEX new_community)
     CEntityAlive* EA = smart_cast<CEntityAlive*>(this);
     VERIFY(EA);
 
-    CSE_Abstract* e_entity = ai().alife().objects().object(EA->ID(), false);
-    if (!e_entity)
-        return;
 
     CharacterInfo().SetCommunity(new_community);
+
     if (EA->g_Alive())
     {
         EA->ChangeTeam(CharacterInfo().Community().team(), EA->g_Squad(), EA->g_Group());
     }
-
     // XXX: special case for trader, investigate if we can get rid of it
+    CSE_Abstract* e_entity = ai().alife().objects().object(EA->ID(), false);
+    if (!e_entity)
+        return;
+
     CSE_ALifeTraderAbstract* trader = smart_cast<CSE_ALifeTraderAbstract*>(e_entity);
     if (!trader)
         return;

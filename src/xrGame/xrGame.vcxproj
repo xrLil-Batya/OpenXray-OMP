@@ -733,6 +733,7 @@
     <ClInclude Include="game_cl_capture_the_artefact_captions_manager.h" />
     <ClInclude Include="game_cl_deathmatch.h" />
     <ClInclude Include="game_cl_deathmatch_snd_messages.h" />
+    <ClInclude Include="game_cl_freemp.h" />
     <ClInclude Include="game_cl_mp.h" />
     <ClInclude Include="game_cl_mp_messages_menu.h" />
     <ClInclude Include="game_cl_mp_script.h" />
@@ -755,6 +756,7 @@
     <ClInclude Include="game_sv_capture_the_artefact.h" />
     <ClInclude Include="game_sv_deathmatch.h" />
     <ClInclude Include="game_sv_event_queue.h" />
+    <ClInclude Include="game_sv_freemp.h" />
     <ClInclude Include="game_sv_item_respawner.h" />
     <ClInclude Include="game_sv_mp.h" />
     <ClInclude Include="game_sv_mp_script.h" />
@@ -1285,6 +1287,7 @@
     <ClInclude Include="UIGameCTA.h" />
     <ClInclude Include="UIGameCustom.h" />
     <ClInclude Include="UIGameDM.h" />
+    <ClInclude Include="UIGameFMP.h" />
     <ClInclude Include="UIGameMP.h" />
     <ClInclude Include="UIGameSP.h" />
     <ClInclude Include="UIGameTDM.h" />
@@ -1949,6 +1952,7 @@
     <ClCompile Include="ai_sounds.cpp" />
     <ClCompile Include="ai_space.cpp" />
     <ClCompile Include="ai_stalker_alife.cpp" />
+    <ClCompile Include="ai_stalker_net.cpp" />
     <ClCompile Include="alife_anomalous_zone.cpp" />
     <ClCompile Include="alife_combat_manager.cpp" />
     <ClCompile Include="alife_communication_manager.cpp" />
@@ -2271,6 +2275,7 @@
     <ClCompile Include="game_cl_capture_the_artefact_messages_menu.cpp" />
     <ClCompile Include="game_cl_deathmatch.cpp" />
     <ClCompile Include="game_cl_deathmatch_buywnd.cpp" />
+    <ClCompile Include="game_cl_freemp.cpp" />
     <ClCompile Include="game_cl_mp.cpp" />
     <ClCompile Include="game_cl_mp_messages_menu.cpp" />
     <ClCompile Include="game_cl_mp_script.cpp">
@@ -2302,6 +2307,7 @@
       <PrecompiledHeaderFile>pch_script.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="game_sv_event_queue.cpp" />
+    <ClCompile Include="game_sv_freemp.cpp" />
     <ClCompile Include="game_sv_item_respawner.cpp" />
     <ClCompile Include="game_sv_mp.cpp" />
     <ClCompile Include="game_sv_mp_script.cpp">
@@ -3179,6 +3185,7 @@
       <PrecompiledHeaderOutputFile>$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <ClCompile Include="UIGameDM.cpp" />
+    <ClCompile Include="UIGameFMP.cpp" />
     <ClCompile Include="UIGameMP.cpp" />
     <ClCompile Include="UIGameSP.cpp">
       <PrecompiledHeaderFile>pch_script.h</PrecompiledHeaderFile>

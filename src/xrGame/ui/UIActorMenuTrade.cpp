@@ -155,13 +155,13 @@ void CUIActorMenu::DeInitTradeMode()
     }
 
     //только если находимся в режиме single
-    CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-    if (!pGameSP)
+    // CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+    if (!CurrentGameUI())
         return;
 
-    if (pGameSP->TalkMenu->IsShown())
+    if (CurrentGameUI()->TalkMenu->IsShown())
     {
-        pGameSP->TalkMenu->NeedUpdateQuestions();
+        CurrentGameUI()->TalkMenu->NeedUpdateQuestions();
     }
 }
 
@@ -397,7 +397,9 @@ void CUIActorMenu::OnBtnPerformTrade(CUIWindow* w, void* d)
         return;
     }
 
-    int actor_money = (int)m_pActorInvOwner->get_money();
+    int moneyMp = Game().local_player->money_for_round;
+
+    int actor_money = moneyMp; //(int)m_pActorInvOwner->get_money();
     int partner_money = (int)m_pPartnerInvOwner->get_money();
     int actor_price = (int)CalcItemsPrice(m_pLists[eTradeActorList], m_partner_trade, true);
     int partner_price = (int)CalcItemsPrice(m_pLists[eTradePartnerList], m_partner_trade, false);
@@ -412,6 +414,14 @@ void CUIActorMenu::OnBtnPerformTrade(CUIWindow* w, void* d)
 
         TransferItems(m_pLists[eTradeActorList], m_pLists[eTradePartnerBagList], m_partner_trade, true);
         TransferItems(m_pLists[eTradePartnerList], m_pLists[eTradeActorBagList], m_partner_trade, false);
+
+        NET_Packet packet;
+
+        Game().u_EventGen(packet, GE_MONEY, m_pActorInvOwner->object_id());
+        packet.w_u32(actor_money);
+        Game().u_EventSend(packet);
+
+        // Log("EventToServer = ", m_pActorInvOwner->object_id());
     }
     else
     {
@@ -439,8 +449,9 @@ void CUIActorMenu::OnBtnPerformTradeBuy(CUIWindow* w, void* d)
     {
         return;
     }
+    int moneyMp = Game().local_player->money_for_round;
 
-    int actor_money = (int)m_pActorInvOwner->get_money();
+    int actor_money = moneyMp; //(int)m_pActorInvOwner->get_money();
     int partner_money = (int)m_pPartnerInvOwner->get_money();
     int actor_price = 0; //(int)CalcItemsPrice( m_pLists[eTradeActorList],   m_partner_trade, true  );
     int partner_price = (int)CalcItemsPrice(m_pLists[eTradePartnerList], m_partner_trade, false);
@@ -455,6 +466,15 @@ void CUIActorMenu::OnBtnPerformTradeBuy(CUIWindow* w, void* d)
 
         //		TransferItems( m_pLists[eTradeActorList],   m_pLists[eTradePartnerBagList], m_partner_trade, true );
         TransferItems(m_pLists[eTradePartnerList], m_pLists[eTradeActorBagList], m_partner_trade, false);
+
+        NET_Packet packet;
+
+        Game().u_EventGen(packet, GE_MONEY, m_pActorInvOwner->object_id());
+
+        packet.w_u32(actor_money);
+
+        Game().u_EventSend(packet);
+        Log("EventToServer = ", m_pActorInvOwner->object_id());
     }
     else
     {
@@ -481,8 +501,9 @@ void CUIActorMenu::OnBtnPerformTradeSell(CUIWindow* w, void* d)
     {
         return;
     }
+    int moneyMp = Game().local_player->money_for_round;
 
-    int actor_money = (int)m_pActorInvOwner->get_money();
+    int actor_money = moneyMp; //(int)m_pActorInvOwner->get_money();
     int partner_money = (int)m_pPartnerInvOwner->get_money();
     int actor_price = (int)CalcItemsPrice(m_pLists[eTradeActorList], m_partner_trade, true);
     int partner_price = 0; //(int)CalcItemsPrice( m_pLists[eTradePartnerList], m_partner_trade, false );
@@ -497,14 +518,23 @@ void CUIActorMenu::OnBtnPerformTradeSell(CUIWindow* w, void* d)
 
         TransferItems(m_pLists[eTradeActorList], m_pLists[eTradePartnerBagList], m_partner_trade, true);
         //		TransferItems( m_pLists[eTradePartnerList],	m_pLists[eTradeActorBagList],	m_partner_trade, false );
+
+        NET_Packet packet;
+
+        Game().u_EventGen(packet, GE_MONEY, m_pActorInvOwner->object_id());
+
+        packet.w_u32(actor_money);
+
+        Game().u_EventSend(packet);
     }
     else
     {
         /*		if ( actor_money < 0 )
-		{
-			ShowMessage( "not_enough_money_actor", "not_enough_money_mine", 2.0f );
-		}
-		else */ if (partner_money < 0)
+        {
+            ShowMessage( "not_enough_money_actor", "not_enough_money_mine", 2.0f );
+        }
+        else */
+        if (partner_money < 0)
         {
             ShowMessage("not_enough_money_partner", "not_enough_money_other", 2.0f);
         }
@@ -545,7 +575,7 @@ void CUIActorMenu::TransferItems(
     pTrade->pPartner.inv_owner->set_money(pTrade->pPartner.inv_owner->get_money(), true);
 }
 
-//Alundaio: Donate current item while in trade menu
+// Alundaio: Donate current item while in trade menu
 void CUIActorMenu::DonateCurrentItem(CUICellItem* cell_item)
 {
     if (!m_partner_trade || !m_pLists[eTradePartnerList])

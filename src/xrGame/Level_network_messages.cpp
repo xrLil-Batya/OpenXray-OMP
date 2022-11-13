@@ -470,12 +470,28 @@ void CLevel::ClientReceive()
                 ProcessGameEvents();
         }
         break;
-        case M_SECURE_KEY_SYNC: { OnSecureKeySync(*P);
+        case M_SECURE_KEY_SYNC: { 
+            OnSecureKeySync(*P);
         }
         break;
-        case M_SECURE_MESSAGE: { OnSecureMessage(*P);
+
+        case M_SECURE_MESSAGE: { 
+            OnSecureMessage(*P);
         }
         break;
+
+        case M_SCRIPT:
+        {
+            u32 event;
+            P->r_u32(event);
+            Log("EventRecive = ", event);
+            // game_cl_freemp gameFMP = smart_cast<game_cl_freemp>(Game());
+            Game().TranslateGameMessageScript(event, *P);
+        }
+        break;
+
+
+           
         }
 
         net_msg_Release();

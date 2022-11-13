@@ -115,7 +115,7 @@ bool CUIItemInfo::InitItemInfo(cpcstr xml_name)
         // UIDesc_line->SetAutoDelete		(true);
         // xml_init.InitStatic				(uiXml, "description_line", 0, UIDesc_line);
 
-        if (ai().get_alife()) // (-designer)
+        //if (ai().get_alife()) // (-designer)
         {
             UIProperties = xr_new<UIInvUpgPropertiesWnd>();
             if (!UIProperties->init_from_xml("actor_menu_item.xml"))
@@ -236,7 +236,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
     //		IBuyWnd* buy_menu = gs_mp->pCurBuyMenu->GetItemPrice();
     //		GetItemPrice();
     //	}
-    if (UITradeTip && IsGameTypeSingle())
+    if (UITradeTip /* && IsGameTypeSingle()*/)
     {
         pos.y = UITradeTip->GetWndPos().y;
         if (UIWeight && m_complex_desc)
